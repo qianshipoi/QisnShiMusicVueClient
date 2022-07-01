@@ -2,7 +2,9 @@
   <div class="home">
     <ul>
       <li v-for="tag in tags"
-          :key="tag.id">{{ tag.name }}</li>
+          :key="tag.id">
+        <song-item></song-item>
+      </li>
     </ul>
     <h1>{{ store.counter }}</h1>
     <n-button @click="store.counter++">+</n-button>
@@ -14,6 +16,7 @@ import { onMounted, ref } from 'vue'
 import { api } from '../request/api'
 import { PlaylistTag } from '../typings/neteasecloudmusicapi'
 import { useStore } from '@/store/index'
+import SongItem from '@/components/SongItem.vue'
 
 const store = useStore()
 
