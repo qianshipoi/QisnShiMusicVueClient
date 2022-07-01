@@ -1,15 +1,17 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { darkTheme, NConfigProvider } from 'naive-ui'
-import type { GlobalTheme } from 'naive-ui'
 </script>
 
 <template>
   <n-config-provider :theme="darkTheme">
-    <n-scrollbar style="max-height: 100vh; padding:10px">
-      <router-link to="/">首页</router-link>
-      <router-link to="/about">关于</router-link>
-      <router-view></router-view>
+    <n-scrollbar style="max-height: 100vh; padding:10px;">
+      <router-link to="/">
+        <n-a>首页</n-a>
+      </router-link>
+      <router-link to="/about">
+        <n-a>关于</n-a>
+      </router-link>
+      <router-view style="margin-bottom:20px"></router-view>
     </n-scrollbar>
     <n-global-style />
   </n-config-provider>
