@@ -5,9 +5,9 @@
   "author": "Your Name",
   "main": "dist/electron/main/main.js",
   "scripts": {
-    "vite:dev": "vite",
-    "vite:build": "vue-tsc --noEmit && vite build",
-    "vite:preview": "vite preview",
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
     "ts": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
