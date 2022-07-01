@@ -1,16 +1,25 @@
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { darkTheme, NConfigProvider } from 'naive-ui'
+import type { GlobalTheme } from 'naive-ui'
+</script>
 
 <template>
-  <div>
-    <router-link to="/">首页</router-link>
-    <router-link to="/about">关于</router-link>
-    <router-view></router-view>
-  </div>
+  <n-config-provider :theme="darkTheme">
+    <n-scrollbar style="max-height: 100vh; padding:10px">
+      <router-link to="/">首页</router-link>
+      <router-link to="/about">关于</router-link>
+      <router-view></router-view>
+    </n-scrollbar>
+    <n-global-style />
+  </n-config-provider>
 </template>
 
 <style>
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -18,9 +27,5 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-}
-img {
-  margin: 3px;
 }
 </style>
