@@ -5,11 +5,11 @@
          src="https://oss.kuriyama.top/static/nakiri.png"
          alt="nakiri" />
     <div>
-      <n-h3>Play It Safe</n-h3>
-      <n-h4>Julia Wolf</n-h4>
+      <n-p>Play It Safe</n-p>
+      <n-p>Julia Wolf</n-p>
     </div>
     <div>
-      <n-h4>Play It Safe</n-h4>
+      <n-p>Play It Safe</n-p>
     </div>
     <n-button quaternary
               circle
@@ -31,7 +31,6 @@
         </n-icon>
       </template>
     </n-button>
-
   </div>
 </template>
 
@@ -42,6 +41,7 @@ import { HeartOutline, EllipsisVertical } from '@vicons/ionicons5'
 <style lang="scss" scoped>
 .song-item {
   display: flex;
+  height: 80px;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;

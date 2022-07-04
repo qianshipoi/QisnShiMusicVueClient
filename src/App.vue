@@ -5,12 +5,12 @@ import { darkTheme, NConfigProvider } from 'naive-ui'
 <template>
   <n-config-provider :theme="darkTheme">
     <n-scrollbar style="max-height: 100vh; padding:10px;">
-      <router-link to="/">
+      <!-- <router-link to="/">
         <n-a>首页</n-a>
       </router-link>
       <router-link to="/about">
         <n-a>关于</n-a>
-      </router-link>
+      </router-link> -->
       <router-view style="margin-bottom:20px"></router-view>
     </n-scrollbar>
     <n-global-style />
