@@ -36,6 +36,8 @@
 
 <script setup lang="ts">
 import { HeartOutline, EllipsisVertical } from '@vicons/ionicons5'
+import { useThemeVars } from 'naive-ui'
+const themeVars = useThemeVars()
 </script>
 
 <style lang="scss" scoped>
@@ -46,9 +48,15 @@ import { HeartOutline, EllipsisVertical } from '@vicons/ionicons5'
   align-items: center;
   padding: 10px 20px;
   border-radius: 12px;
-  transition: all 0.3s ease-in-out;
+  transition: background 0.3s ease-in-out;
   &:hover {
-    background: lighten($default-color, 40);
+    background: v-bind('themeVars.hoverColor');
+  }
+
+  .n-p,
+  .n-text {
+    color: v-bind('themeVars.primaryColor');
+    transition: 0.3s var(--cubic-bezier-ease-in-out);
   }
 }
 </style>
