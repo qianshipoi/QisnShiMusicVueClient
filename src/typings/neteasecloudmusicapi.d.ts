@@ -9,3 +9,10 @@ export interface Playlist {
   name: string,
   coverImgUrl: string
 }
+
+
+export interface PlaylistDetail {
+  id: number,
+  name: string,
+  coverImgUrl: string
+}

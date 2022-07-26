@@ -15,6 +15,7 @@
                   :key="playlist.id">
             <template #cover>
               <img :src="playlist.coverImgUrl"
+                   @click="$router.push({name:'Playlist', params:{id: playlist.id }})"
                    style="width:14rem;height:14rem"
                    :alt="playlist.name" />
             </template>
