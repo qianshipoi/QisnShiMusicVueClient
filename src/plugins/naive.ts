@@ -22,6 +22,7 @@ import {
   NCheckboxGroup,
   NCheckbox,
   NIcon,
+  NIconWrapper,
   NLayout,
   NLayoutHeader,
   NLayoutContent,
@@ -77,6 +78,7 @@ import {
   NTimePicker,
   NBackTop,
   NSkeleton,
+  NSlider,
 } from "naive-ui";
 
 // 通用字体
@@ -91,6 +93,7 @@ const naive = create({
     NConfigProvider,
     NGlobalStyle,
     NScrollbar,
+    NSlider,
     NText,
     NA,
     NP,
@@ -107,6 +110,7 @@ const naive = create({
     NCheckboxGroup,
     NCheckbox,
     NIcon,
+    NIconWrapper,
     NLayout,
     NLayoutHeader,
     NLayoutContent,
