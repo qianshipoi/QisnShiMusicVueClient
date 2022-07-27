@@ -111,6 +111,7 @@ const volumeIcon = computed(() => {
   background: skyblue;
   width: calc(100% - 2rem);
   height: 6rem;
+  box-sizing: border-box;
   box-shadow: 0 4px 10px skyblue;
 }
 .buttons {

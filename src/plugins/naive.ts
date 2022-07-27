@@ -79,6 +79,8 @@ import {
   NBackTop,
   NSkeleton,
   NSlider,
+  NImage,
+  NEllipsis,
 } from "naive-ui";
 
 // 通用字体
@@ -95,6 +97,8 @@ const naive = create({
     NScrollbar,
     NSlider,
     NText,
+    NImage,
+    NEllipsis,
     NA,
     NP,
     NH1,

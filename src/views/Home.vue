@@ -23,7 +23,7 @@
         </n-space>
       </n-tab-pane>
     </n-tabs>
-    <control-bar></control-bar>
+    <!-- <control-bar v-if="musicStore.$state.display"></control-bar> -->
   </div>
 </template>
 
@@ -36,7 +36,9 @@ import SongItem from '@/components/SongItem.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
 import ControlBar from '@/components/ControlBar.vue'
 import { useMessage, useThemeVars } from 'naive-ui'
+import { useMusicStore } from '@/store/music'
 
+const musicStore = useMusicStore()
 const store = useStore()
 const themeVars = useThemeVars()
 const message = useMessage()

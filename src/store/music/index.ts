@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 
-export const useStore = defineStore('main', {
+export const useMusicStore = defineStore('music', {
   state: () => {
     return {
-      isDarkTheme: false
+      display: false
     }
   },
   actions: {
