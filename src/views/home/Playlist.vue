@@ -2,10 +2,10 @@
   <div>
     <n-space justify="center">
       <n-skeleton v-if="isBusy"
-                  width="280px"
-                  height="280px" />
+                  width="200px"
+                  height="200px" />
 
-      <n-image width="280"
+      <n-image width="200"
                v-else
                fallback-src="https://oss.kuriyama.top/static/akua.png"
                :src="playlistDetail?.coverImgUrl"
@@ -51,33 +51,7 @@
         v-if="isBusy">
       <li v-for="item in 6"
           :key="item">
-        <n-card>
-          <div style="display:flex;">
-            <n-skeleton v-if="isBusy"
-                        lazy
-                        width="48px"
-                        height="48px"
-                        :sharp="false" />
-            <div style="display:flex;flex-direction: column; justify-content: space-between; margin-left: .75rem;flex:1">
-              <n-skeleton text
-                          :sharp="false"
-                          height="18px" />
-              <n-skeleton text
-                          :sharp="false"
-                          width="80%"
-                          height="16px" />
-            </div>
-            <n-skeleton text
-                        style="margin:auto 0 auto 1rem;flex:1.5"
-                        :sharp="false"
-                        width="280px"
-                        height="20px" />
-            <n-icon :component="Play"
-                    style="margin:auto 1rem"
-                    :size="28"></n-icon>
-            <n-text style="margin: auto 0;font-weight: 800;">00:00</n-text>
-          </div>
-        </n-card>
+        <SongItem></SongItem>
       </li>
     </ul>
     <ul v-else
@@ -85,27 +59,7 @@
       <li v-for="song in playlistDetail?.tracks"
           class="song-item"
           :key="song.id">
-        <n-card>
-          <div style="display:flex;">
-            <n-image fallback-src="https://oss.kuriyama.top/static/akua.png"
-                     :src="song.al.picUrl"
-                     width="48"
-                     height="48"
-                     preview-disabled
-                     :alt="song.name" />
-            <div style="display:flex;flex-direction: column; justify-content: space-between;align-items: flex-start; margin-left: .75rem;flex:1">
-              <n-ellipsis :line-clamp="1"
-                          style="font-size:16px;font-weight: 600;">{{ song.name }}</n-ellipsis>
-              <n-text style="font-size:14px">{{ formatArtists(song.ar) }}</n-text>
-            </div>
-            <n-ellipsis :line-clamp="1"
-                        style="margin:auto 0 auto 1rem;flex:1.5;font-size:18px; font-weight: 800;text-align: left;">{{ song.al.name }}</n-ellipsis>
-            <n-icon :component="Play"
-                    style="margin:auto 1rem"
-                    :size="28"></n-icon>
-            <n-text style="margin: auto 0;font-weight: 800;">00:00</n-text>
-          </div>
-        </n-card>
+        <SongItem :song="song"></SongItem>
       </li>
     </ul>
   </div>
@@ -114,11 +68,14 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/request/api'
-import { useMessage } from 'naive-ui'
+import { useMessage, useThemeVars } from 'naive-ui'
 import { onMounted, ref } from 'vue-demi'
 import { Artist, PlaylistDetail } from '@/typings/neteasecloudmusicapi'
 import { NSpace } from 'naive-ui'
 import { Play } from '@vicons/ionicons5'
+import SongItem from '@/components/SongItem.vue'
+
+const themeVars = useThemeVars()
 const message = useMessage()
 const route = useRoute()
 const router = useRouter()
@@ -153,8 +110,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.song-item {
-  min-height: 2rem;
-  margin-bottom: 1rem;
+.n-ellipsis,
+.n-h1,
+.n-p,
+.n-text {
+  color: v-bind('themeVars.primaryColor');
+  transition: 0.3s var(--cubic-bezier-ease-in-out);
 }
 </style>
