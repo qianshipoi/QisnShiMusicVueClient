@@ -8,12 +8,11 @@
                   v-for="tag in tags"
                   :key="tag.id"
                   :tab="tag.name">
-        <n-space v-if="isBusy"
+        <n-space v-if="isBusy && tag.playlists?.length === 0"
                  justify="space-between">
           <playlist-card v-for="item in 10"
                          :key="item"></playlist-card>
         </n-space>
-
         <n-space v-else
                  justify="space-between">
           <playlist-card v-for="playlist in tag.playlists"
@@ -26,20 +25,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect, watch } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { api } from '../request/api'
 import { PlaylistTag } from '../typings/neteasecloudmusicapi'
-import { useStore } from '@/store/index'
-import SongItem from '@/components/SongItem.vue'
-import NavigationBar from '@/components/NavigationBar.vue'
-import ControlBar from '@/components/ControlBar.vue'
-import { useMessage, useThemeVars } from 'naive-ui'
-import { useMusicStore } from '@/store/music'
+import { useMessage } from 'naive-ui'
 import PlaylistCard from '@/components/PlaylistCard.vue'
 
-const musicStore = useMusicStore()
-const store = useStore()
-const themeVars = useThemeVars()
 const message = useMessage()
 const tags = ref<Array<PlaylistTag>>()
 const selectedTagId = ref<number>()
