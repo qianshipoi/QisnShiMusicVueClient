@@ -22,7 +22,16 @@ watchEffect(() => {
       <navigation-bar></navigation-bar>
       <div style="height:6rem"></div>
       <n-scrollbar style="height: calc(100vh - 6rem);">
-        <router-view style="margin-bottom:20px;padding:10px;"></router-view>
+
+        <router-view v-slot="{ Component }"
+                     style="margin-bottom:20px;padding:10px;">
+          <keep-alive>
+            <component :is="Component"
+                       v-if="$route.meta.keepActive" />
+          </keep-alive>
+          <component :is="Component"
+                     v-if="!$route.meta.keepActive" />
+        </router-view>
       </n-scrollbar>
       <control-bar v-if="musicStore.$state.display"></control-bar>
       <n-global-style />
