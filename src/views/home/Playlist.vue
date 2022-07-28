@@ -59,7 +59,8 @@
       <li v-for="song in playlistDetail?.tracks"
           class="song-item"
           :key="song.id">
-        <SongItem :song="song"></SongItem>
+        <SongItem :song="song"
+                  @play="play"></SongItem>
       </li>
     </ul>
   </div>
@@ -102,6 +103,11 @@ const getPlaylistDetail = async (id: number) => {
   } finally {
     isBusy.value = false
   }
+}
+
+const play = (id: number) => {
+  const song = playlistDetail.value?.tracks.find((x) => x.id === id)
+  message.info(`play song ${song?.name}`)
 }
 
 onMounted(() => {

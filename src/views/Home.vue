@@ -8,22 +8,20 @@
                   v-for="tag in tags"
                   :key="tag.id"
                   :tab="tag.name">
-        <n-space justify="space-between">
-          <n-card v-for="playlist in tag.playlists"
-                  class="playlist-card"
-                  :title="playlist.name"
-                  :key="playlist.id">
-            <template #cover>
-              <img :src="playlist.coverImgUrl"
-                   @click="$router.push({name:'Playlist', params:{id: playlist.id }})"
-                   style="width:14rem;height:14rem"
-                   :alt="playlist.name" />
-            </template>
-          </n-card>
+        <n-space v-if="isBusy"
+                 justify="space-between">
+          <playlist-card v-for="item in 10"
+                         :key="item"></playlist-card>
+        </n-space>
+
+        <n-space v-else
+                 justify="space-between">
+          <playlist-card v-for="playlist in tag.playlists"
+                         :key="playlist.id"
+                         :playlist="playlist"></playlist-card>
         </n-space>
       </n-tab-pane>
     </n-tabs>
-    <!-- <control-bar v-if="musicStore.$state.display"></control-bar> -->
   </div>
 </template>
 
@@ -37,6 +35,7 @@ import NavigationBar from '@/components/NavigationBar.vue'
 import ControlBar from '@/components/ControlBar.vue'
 import { useMessage, useThemeVars } from 'naive-ui'
 import { useMusicStore } from '@/store/music'
+import PlaylistCard from '@/components/PlaylistCard.vue'
 
 const musicStore = useMusicStore()
 const store = useStore()
@@ -44,6 +43,7 @@ const themeVars = useThemeVars()
 const message = useMessage()
 const tags = ref<Array<PlaylistTag>>()
 const selectedTagId = ref<number>()
+const isBusy = ref(false)
 
 watchEffect(() => {
   if (tags.value && tags.value.length > 0) {
@@ -61,21 +61,31 @@ const tabsChanged = (val: number) => {
 }
 
 const getHot = async () => {
-  const { status, data } = await api.playlist.hot()
-  if (status === 200 && data.code === 200) {
-    tags.value = data.tags
+  isBusy.value = true
+  try {
+    const { status, data } = await api.playlist.hot()
+    if (status === 200 && data.code === 200) {
+      tags.value = data.tags
+    }
+  } finally {
+    isBusy.value = false
   }
 }
 
 const getPlaylist = async (tag: PlaylistTag) => {
-  const { status, data } = await api.playlist.topPlaylistHighquality(
-    tag.name,
-    undefined,
-    undefined
-  )
-  if (status === 200 && data.code === 200) {
-    tag.playlists = data.playlists
-    message.success('获取数据成功' + tag.name)
+  isBusy.value = true
+  try {
+    const { status, data } = await api.playlist.topPlaylistHighquality(
+      tag.name,
+      undefined,
+      undefined
+    )
+    if (status === 200 && data.code === 200) {
+      tag.playlists = data.playlists
+      message.success('获取数据成功' + tag.name)
+    }
+  } finally {
+    isBusy.value = false
   }
 }
 
@@ -87,14 +97,5 @@ onMounted(getHot)
   display: flex;
   justify-content: space-between;
   height: 100%;
-}
-.playlist-card {
-  cursor: pointer;
-  max-width: 14rem;
-  transition: all ease-in-out 0.2s;
-  &:hover {
-    transform: perspective(1px) scale(1.01);
-    box-shadow: 0 2px 10px v-bind('themeVars.primaryColor');
-  }
 }
 </style>

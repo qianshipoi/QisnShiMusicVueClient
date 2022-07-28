@@ -30,7 +30,8 @@
     </div>
   </n-card>
   <n-card v-else
-          class="song-item">
+          class="song-item"
+          @dblclick="emit('play',song?.id??0)">
     <div style="display:flex;">
       <n-image fallback-src="https://oss.kuriyama.top/static/akua.png"
                :src="song.al.picUrl"
@@ -61,6 +62,10 @@ import { Song, Artist } from '@/typings/neteasecloudmusicapi'
 const themeVars = useThemeVars()
 defineProps<{
   song?: Song
+}>()
+
+const emit = defineEmits<{
+  (e: 'play', id: number): void
 }>()
 
 const formatArtists = (artists: Array<Artist>): string => {
