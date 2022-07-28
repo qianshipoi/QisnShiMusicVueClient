@@ -102,7 +102,6 @@ const formatArtists = (artists: Array<Artist>): string => {
 }
 :deep(.song-album) {
   margin: auto 0 auto 1rem;
-  display: flex;
   flex: 1.5;
   font-size: 18px;
   font-weight: 800;
