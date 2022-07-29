@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { darkTheme, NConfigProvider, lightTheme } from 'naive-ui'
+import { darkTheme, NConfigProvider, lightTheme, useThemeVars } from 'naive-ui'
 import NavigationBar from './components/NavigationBar.vue'
 import ControlBar from './components/ControlBar.vue'
 import { useMusicStore } from './store/music'
@@ -14,6 +14,7 @@ const themeMode = ref(darkTheme)
 watchEffect(() => {
   themeMode.value = mainStore.isDarkTheme ? darkTheme : lightTheme
 })
+const themeVars = useThemeVars()
 </script>
 
 <template>
@@ -46,5 +47,15 @@ watchEffect(() => {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.n-h1,
+.n-h2,
+.n-h3,
+.n-h4,
+.n-h5,
+.n-h6,
+.n-p,
+.n-text {
+  color: v-bind('themeVars.primaryColor');
 }
 </style>
