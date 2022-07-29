@@ -1,10 +1,7 @@
 <template>
   <div class="navigation-bar">
-    <n-space>
 
-    </n-space>
-
-    <search-box></search-box>
+    <search-box v-if="$route.name !== 'Search'"></search-box>
     <n-button type="primary"
               strong
               secondary
@@ -21,7 +18,7 @@
 <script setup lang="ts">
 import { useStore } from '@/store'
 import { Moon, Sunny } from '@vicons/ionicons5'
-import { useThemeVars , NSpace} from 'naive-ui'
+import { useThemeVars, NSpace } from 'naive-ui'
 import { shallowRef, watchEffect } from 'vue-demi'
 import SearchBox from './SearchBox.vue'
 

@@ -81,6 +81,8 @@ import {
   NSlider,
   NImage,
   NEllipsis,
+  NCollapse,
+  NCollapseItem,
 } from "naive-ui";
 
 // 通用字体
@@ -99,6 +101,8 @@ const naive = create({
     NText,
     NImage,
     NEllipsis,
+    NCollapse,
+    NCollapseItem,
     NA,
     NP,
     NH1,

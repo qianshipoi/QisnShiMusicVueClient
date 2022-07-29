@@ -13,5 +13,6 @@ class api {
 }
 
 export {
-  api
+  api,
+  SearchType
 }
