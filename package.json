@@ -53,6 +53,7 @@
     "@types/qs": "^6.9.7",
     "@vicons/ionicons5": "latest",
     "@vicons/utils": "latest",
+    "@vueuse/components": "^9.0.2",
     "@vueuse/core": "^9.0.0",
     "axios": "^0.27.2",
     "pinia": "^2.0.14",

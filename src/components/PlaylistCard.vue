@@ -2,12 +2,12 @@
   <n-card v-if="!playlist"
           class="playlist-card">
     <template #cover>
-      <n-skeleton width="196px"
-                  height="196px" />
+      <n-skeleton width="100%"
+                  style="padding-top:100%" />
       <n-skeleton text
                   :repeat="1"
                   style="margin:1rem"
-                  width="160px"
+                  width="80%"
                   height="26px" />
     </template>
   </n-card>
@@ -17,7 +17,6 @@
     <template #cover>
       <img :src="playlist.coverImgUrl"
            @click="$router.push({name:'Playlist', params:{id: playlist?.id }})"
-           style="width:14rem;height:14rem"
            :alt="playlist.name" />
     </template>
   </n-card>
@@ -37,7 +36,7 @@ const themeVars = useThemeVars()
 <style lang="scss" scoped>
 .playlist-card {
   cursor: pointer;
-  max-width: 14rem;
+  // max-width: 14rem;
   transition: all ease-in-out 0.2s;
   &:hover {
     transform: perspective(1px) scale(1.01);

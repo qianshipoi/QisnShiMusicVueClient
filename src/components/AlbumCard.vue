@@ -2,12 +2,12 @@
   <n-card class="album-card"
           v-if="!album">
     <template #cover>
-      <n-skeleton width="196px"
-                  height="196px"
+      <n-skeleton width="100%"
+                  style="padding:100%"
                   :sharp="false" />
       <n-skeleton text
                   style="margin:1rem"
-                  width="160px"
+                  width="80%"
                   height="28px" />
     </template>
   </n-card>
@@ -18,7 +18,7 @@
       <n-image :src="album.picUrl"
                :alt="album.name"
                preview-disabled
-               style="width:14rem;height:14rem" />
+               style="width:100%" />
     </template>
   </n-card>
 </template>
@@ -37,7 +37,6 @@ const themeVars = useThemeVars()
 <style lang="scss" scoped>
 .album-card {
   cursor: pointer;
-  max-width: 14rem;
   transition: all ease-in-out 0.2s;
   &:hover {
     transform: perspective(1px) scale(1.01);

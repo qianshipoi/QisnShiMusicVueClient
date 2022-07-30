@@ -12,52 +12,42 @@
         搜索
       </n-button>
     </n-input-group>
-
-    <n-collapse :default-expanded-names="['1','2','3']">
+    <n-collapse :default-expanded-names="['1','2','3']"
+                display-directive="show">
       <n-collapse-item title="专辑"
                        name="1">
-        <n-space v-if="isBusy"
-                 justify="space-between">
-          <album-card v-for="item in 10"
-                      :key="item"></album-card>
-        </n-space>
-        <n-space v-else
-                 justify="space-between">
-          <album-card :album="album"
-                      v-for="album in searchResult.albums"
-                      :key="album.id"></album-card>
-        </n-space>
+        <card-list-base :data="searchResult.albums"
+                        :skeleton-count="10"
+                        name="id"
+                        :is-busy="isBusy">
+          <template #default="{ item }">
+            <album-card :album="item"></album-card>
+          </template>
+        </card-list-base>
       </n-collapse-item>
       <n-collapse-item title="歌单"
                        name="2">
-        <n-space v-if="isBusy"
-                 justify="space-between">
-          <playlist-card v-for="item in 10"
-                         :key="item"></playlist-card>
-        </n-space>
-        <n-space v-else
-                 justify="space-between">
-          <playlist-card :playlist="playlist"
-                         v-for="playlist in searchResult.playlists"
-                         :key="playlist.id"></playlist-card>
-        </n-space>
+        <card-list-base :data="searchResult.playlists"
+                        :skeleton-count="10"
+                        name="id"
+                        :is-busy="isBusy">
+          <template #default="{ item }">
+            <playlist-card :playlist="item"></playlist-card>
+          </template>
+        </card-list-base>
       </n-collapse-item>
       <n-collapse-item title="艺人"
                        name="3">
-        <n-space v-if="isBusy"
-                 justify="space-between">
-          <artist-card v-for="item in 10"
-                       :key="item"></artist-card>
-        </n-space>
-        <n-space v-else
-                 justify="space-between">
-          <artist-card :artist="artist"
-                       v-for="artist in searchResult.artists"
-                       :key="artist.id"></artist-card>
-        </n-space>
+        <card-list-base :data="searchResult.artists"
+                        name="id"
+                        :skeleton-count="10"
+                        :is-busy="isBusy">
+          <template #default="{ item }">
+            <artist-card :artist="item"></artist-card>
+          </template>
+        </card-list-base>
       </n-collapse-item>
     </n-collapse>
-
   </div>
 </template>
 
@@ -71,6 +61,7 @@ import AlbumCard from '@/components/AlbumCard.vue'
 import PlaylistCard from '@/components/PlaylistCard.vue'
 import ArtistCard from '@/components/ArtistCard.vue'
 import { useUrlSearchParams } from '@vueuse/core'
+import CardListBase from '@/components/CardListBase.vue'
 
 const params = useUrlSearchParams('history')
 const route = useRoute()

@@ -8,17 +8,14 @@
                   v-for="tag in tags"
                   :key="tag.id"
                   :tab="tag.name">
-        <n-space v-if="isBusy && tag.playlists?.length === 0"
-                 justify="space-between">
-          <playlist-card v-for="item in 10"
-                         :key="item"></playlist-card>
-        </n-space>
-        <n-space v-else
-                 justify="space-between">
-          <playlist-card v-for="playlist in tag.playlists"
-                         :key="playlist.id"
-                         :playlist="playlist"></playlist-card>
-        </n-space>
+        <card-list-base :data="tag.playlists"
+                        name="id"
+                        :skeleton-count="10"
+                        :is-busy="isBusy && tag.playlists?.length === 0">
+          <template #default="{ item }">
+            <playlist-card :playlist="item"></playlist-card>
+          </template>
+        </card-list-base>
       </n-tab-pane>
     </n-tabs>
   </div>
@@ -30,7 +27,10 @@ import { api } from '../request/api'
 import { PlaylistTag } from '../typings/neteasecloudmusicapi'
 import { useMessage } from 'naive-ui'
 import PlaylistCard from '@/components/PlaylistCard.vue'
+import { useMediaQuery } from '@vueuse/core'
+import CardListBase from '@/components/CardListBase.vue'
 
+const isLargeScreen = useMediaQuery('(min-width: 500px)')
 const message = useMessage()
 const tags = ref<Array<PlaylistTag>>()
 const selectedTagId = ref<number>()
@@ -88,5 +88,15 @@ onMounted(getHot)
   display: flex;
   justify-content: space-between;
   height: 100%;
+  overflow: hidden;
+  :deep(.n-tabs) {
+    width: 100%;
+  }
+  :deep(.n-tabs-nav) {
+    width: 100%;
+  }
+  :deep(.n-tabs .n-tabs-rail) {
+    display: v-bind('isLargeScreen ? `flex` : `block`');
+  }
 }
 </style>

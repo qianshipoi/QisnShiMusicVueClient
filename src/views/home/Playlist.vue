@@ -4,7 +4,6 @@
       <n-skeleton v-if="isBusy"
                   width="200px"
                   height="200px" />
-
       <n-image width="200"
                v-else
                fallback-src="https://oss.kuriyama.top/static/akua.png"
