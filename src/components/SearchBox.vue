@@ -1,8 +1,8 @@
 <template>
   <n-input-group>
-    <n-input placeholder="input content to search"
+    <n-input placeholder="输入关键字搜索"
              v-model:value="content"
-             :style="{ width: '30%', textAlign:'left'}"
+             :style="{ width: '20%', textAlign:'left'}"
              autofocus
              @keypress.enter="search" />
     <n-button type="primary"

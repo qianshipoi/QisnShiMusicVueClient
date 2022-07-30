@@ -1,6 +1,8 @@
 <template>
   <div class="navigation-bar">
-
+    <n-menu mode="horizontal"
+            style="width: 50%;"
+            :options="menuOptions" />
     <search-box v-if="$route.name !== 'Search'"></search-box>
     <n-button type="primary"
               strong
@@ -18,12 +20,36 @@
 <script setup lang="ts">
 import { useStore } from '@/store'
 import { Moon, Sunny } from '@vicons/ionicons5'
-import { useThemeVars, NSpace } from 'naive-ui'
-import { shallowRef, watchEffect } from 'vue-demi'
+import { useThemeVars, NIcon } from 'naive-ui'
+import type { MenuOption } from 'naive-ui'
+import { ref, Component, h, shallowRef, watchEffect } from 'vue'
 import SearchBox from './SearchBox.vue'
+import { Home } from '@vicons/ionicons5'
+import { RouterLink } from 'vue-router'
 
 const themeModeIcon = shallowRef(Sunny)
 const store = useStore()
+
+function renderIcon(icon: Component) {
+  return () => h(NIcon, null, { default: () => h(icon) })
+}
+const menuOptions: MenuOption[] = [
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: 'Home'
+          }
+        },
+        { default: () => '首页' }
+      ),
+    key: 'go-back-home',
+    icon: renderIcon(Home)
+  }
+]
+
 watchEffect(() => {
   themeModeIcon.value = store.isDarkTheme ? Moon : Sunny
 })
@@ -41,7 +67,7 @@ const themeVars = useThemeVars()
   right: 0;
   z-index: 999;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 1rem;
   height: 6rem;
