@@ -1,23 +1,33 @@
 <template>
-  <n-card v-if="!playlist"
-          class="playlist-card">
-    <template #cover>
-      <n-skeleton width="100%"
-                  style="padding-top:100%" />
-      <n-skeleton text
+  <n-card class="playlist-card">
+    <template #header>
+      <n-skeleton v-if="!playlist"
+                  text
                   :repeat="1"
-                  style="margin:1rem"
                   width="80%"
                   height="26px" />
+      <template v-else>
+        {{ playlist.name }}
+      </template>
     </template>
-  </n-card>
-  <n-card v-else
-          class="playlist-card"
-          :title="playlist.name">
     <template #cover>
-      <img :src="playlist.coverImgUrl"
-           @click="$router.push({name:'Playlist', params:{id: playlist?.id }})"
-           :alt="playlist.name" />
+      <n-skeleton width="100%"
+                  v-if="!playlist"
+                  :sharp="false"
+                  style="padding-top:100%" />
+      <n-image :src="playlist.coverImgUrl"
+               v-else
+               :preview-disabled="true"
+               lazy
+               width="100%"
+               @click="$router.push({name:'Playlist', params:{id: playlist?.id }})"
+               :alt="playlist.name">
+        <template #placeholder>
+          <n-skeleton :sharp="false"
+                      style="padding-top: 100%;"
+                      width="100%" />
+        </template>
+      </n-image>
     </template>
   </n-card>
 </template>
@@ -36,11 +46,14 @@ const themeVars = useThemeVars()
 <style lang="scss" scoped>
 .playlist-card {
   cursor: pointer;
-  // max-width: 14rem;
   transition: all ease-in-out 0.2s;
   &:hover {
     transform: perspective(1px) scale(1.01);
     box-shadow: 0 2px 10px v-bind('themeVars.primaryColor');
+  }
+  :deep(.n-image) {
+    width: 100%;
+    display: flex;
   }
 }
 </style>

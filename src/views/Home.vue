@@ -6,6 +6,7 @@
             animated>
       <n-tab-pane :name="tag.id"
                   v-for="tag in tags"
+                  display-directive="show:lazy"
                   :key="tag.id"
                   :tab="tag.name">
         <card-list-base :data="tag.playlists"
