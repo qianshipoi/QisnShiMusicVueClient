@@ -17,6 +17,7 @@ import {
   NH5,
   NH6,
   NButton,
+  NButtonGroup,
   NForm,
   NFormItem,
   NCheckboxGroup,
@@ -83,13 +84,13 @@ import {
   NEllipsis,
   NCollapse,
   NCollapseItem,
-  NCollapseTransition,
-} from "naive-ui";
+  NCollapseTransition
+} from 'naive-ui';
 
 // 通用字体
-import 'vfonts/Lato.css'
+import 'vfonts/Lato.css';
 // 等宽字体
-import 'vfonts/FiraCode.css'
+import 'vfonts/FiraCode.css';
 
 const naive = create({
   components: [
@@ -114,6 +115,7 @@ const naive = create({
     NH6,
     NInput,
     NButton,
+    NButtonGroup,
     NForm,
     NFormItem,
     NCheckboxGroup,
@@ -175,8 +177,8 @@ const naive = create({
     NTimePicker,
     NBackTop,
     NSkeleton,
-    NCollapseTransition,
-  ],
+    NCollapseTransition
+  ]
 });
 
 export function setupNaive(app: App<Element>) {

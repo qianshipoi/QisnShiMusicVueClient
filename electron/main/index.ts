@@ -1,4 +1,13 @@
-import { app, BrowserWindow, shell, ipcMain, nativeTheme } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  nativeTheme,
+  Tray,
+  Menu,
+  Event
+} from 'electron';
 import { release } from 'node:os';
 import { join } from 'node:path';
 
@@ -35,6 +44,7 @@ if (!app.requestSingleInstanceLock()) {
 // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 let win: BrowserWindow | null = null;
+let tray: Tray | null = null;
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.js');
 const url = process.env.VITE_DEV_SERVER_URL;
@@ -45,6 +55,9 @@ async function createWindow() {
     title: 'Main window',
     width: 1280,
     height: 820,
+    minWidth: 1000,
+    minHeight: 640,
+    frame: false,
     icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload,
@@ -76,6 +89,44 @@ async function createWindow() {
     return { action: 'deny' };
   });
   // win.webContents.on('will-navigate', (event, url) => { }) #344
+
+  win.on('close', (event: Event) => {
+    // 截获 close 默认行为
+    event.preventDefault();
+    // 点击关闭时触发close事件，我们按照之前的思路在关闭时，隐藏窗口，隐藏任务栏窗口
+    win.hide();
+    win.setSkipTaskbar(true);
+  });
+
+  // 触发显示时触发
+  win.on('show', () => {});
+  // 触发隐藏时触发
+  win.on('hide', () => {});
+
+  tray = new Tray(join(process.env.PUBLIC, 'akua.jpg'));
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '显示',
+      click: () => {
+        win.show();
+      }
+    },
+    {
+      label: '退出',
+      click: () => {
+        win.destroy();
+      }
+    }
+  ]);
+
+  tray.setToolTip('QianShi music.');
+  tray.setContextMenu(contextMenu);
+  tray.on('double-click', () => {
+    // 双击通知区图标实现应用的显示或隐藏
+    win.isVisible() ? win.hide() : win.show();
+    win.isVisible() ? win.setSkipTaskbar(false) : win.setSkipTaskbar(true);
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -123,8 +174,65 @@ ipcMain.handle('open-win', (_, arg) => {
 ipcMain.handle('dark-mode', () => {
   return nativeTheme.themeSource;
 });
+
 // 设置APP主题模式
 ipcMain.handle('dark-mode:change', (_, type: 'system' | 'light' | 'dark') => {
   nativeTheme.themeSource = type;
   return nativeTheme.themeSource;
+});
+
+ipcMain.on('window-close', () => {
+  app.quit();
+});
+
+ipcMain.on('window-minimize', () => {
+  win.minimize();
+});
+
+ipcMain.on('window-maximize', () => {
+  win.setFullScreen(true);
+});
+
+ipcMain.on('window-unmaximize', () => {
+  win.setFullScreen(false);
+});
+
+ipcMain.on('contrl-window', (event, args) => {
+  switch (args) {
+    case 'minimize':
+      win.minimize();
+      break;
+    case 'restore':
+      if (process.platform === 'darwin') {
+        if (win.isFullScreen()) {
+          win.setFullScreen(false);
+        }
+      }
+      win.unmaximize();
+      break;
+    case 'maximize':
+      if (process.platform === 'darwin') {
+        win.setFullScreen(true);
+      } else {
+        win.maximize();
+      }
+      break;
+    case 'close':
+      win && win.close();
+      break;
+    case 'openDev':
+      win.webContents.openDevTools();
+      break;
+    case 'backHome':
+      if (process.platform === 'darwin') {
+        win.setFullScreen(false);
+      }
+      win.setSize(1048, 700);
+      win.setResizable(false);
+      win.center();
+      break;
+    default:
+      break;
+  }
+  event.returnValue = 'setSuccess';
 });
