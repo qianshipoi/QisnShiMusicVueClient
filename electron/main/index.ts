@@ -170,9 +170,15 @@ ipcMain.handle('open-win', (_, arg) => {
   }
 });
 
+nativeTheme.on('updated', () => {});
+
 // 获取APP当前主题模式
 ipcMain.handle('dark-mode', () => {
   return nativeTheme.themeSource;
+});
+
+ipcMain.handle('should-use-dark-colors', () => {
+  return nativeTheme.shouldUseDarkColors;
 });
 
 // 设置APP主题模式

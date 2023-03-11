@@ -59,7 +59,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <n-config-provider :theme="themeMode" style="height:100%" :locale="mainStore.local" :date-locale="mainStore.dateLocal">
+  <n-config-provider :theme="themeMode" class="h-full" :locale="mainStore.local" :date-locale="mainStore.dateLocal">
     <n-message-provider>
       <n-loading-bar-provider>
         <router-view></router-view>

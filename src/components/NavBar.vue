@@ -2,8 +2,7 @@
   <div class="nav-bar flex justify-between items-center h-16 px-4 ">
     <h1 class="title">QS</h1>
     <n-input v-model:value="searchText" type="text" placeholder="搜索..." class="max-w-md" clearable></n-input>
-    <n-button type="primary" size="medium" @click="themeChange">切换</n-button>
-    <n-select v-model:value="currentTheme" size="medium" :options="themeOptions" clearable />
+    <n-select class="w-64" v-model:value="currentTheme" size="medium" :options="themeOptions" />
 
     <n-button-group size="small">
       <n-button strong secondary @click="minimize">
@@ -41,18 +40,33 @@ const store = useStore()
 
 const searchText = ref<string>()
 
-const currentTheme = ref<string>('dark')
-const themeOptions =[]
+type Theme = 'dark' | 'light' | 'system'
 
-let isDark: boolean = false
+onBeforeMount(async () => {
+  const theme: Theme = await ipcRenderer.invoke('dark-mode');
 
-const themeChange = async () => {
-  ipcRenderer.invoke("dark-mode:change", isDark ? "light" : "dark");
+  if (theme === "system") {
+    const isDark = await ipcRenderer.invoke('should-use-dark-colors')
+    console.log(isDark);
+    store.$patch(state => state.isDarkTheme = isDark)
+  }
+  currentTheme.value = theme
+})
 
-  store.$patch(state => state.isDarkTheme = !isDark)
+const currentTheme = ref<Theme>('system')
+const themeOptions = [
+  { label: 'dark', value: 'dark' },
+  { label: 'light', value: 'light' },
+  { label: 'system', value: 'system' }
+]
 
-  isDark = !isDark
-}
+watch(() => currentTheme.value, async (newVal: 'dark' | 'light' | 'system') => {
+  ipcRenderer.invoke("dark-mode:change", newVal);
+
+  const useDarkColors = await ipcRenderer.invoke('should-use-dark-colors')
+
+  store.$patch(state => state.isDarkTheme = useDarkColors)
+})
 
 const close = () => {
   ipcRenderer.send('window-close')
@@ -85,6 +99,7 @@ const minimize = () => {
   user-select: none;
 }
 
+.n-select,
 .n-input,
 button {
   -webkit-app-region: no-drag;
