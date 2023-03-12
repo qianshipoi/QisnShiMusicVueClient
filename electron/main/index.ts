@@ -90,6 +90,8 @@ async function createWindow() {
   });
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 
+  win.webContents.send('theme-changed', nativeTheme.themeSource);
+
   win.on('close', (event: Event) => {
     // 截获 close 默认行为
     event.preventDefault();
@@ -170,7 +172,12 @@ ipcMain.handle('open-win', (_, arg) => {
   }
 });
 
-nativeTheme.on('updated', () => {});
+nativeTheme.on('updated', (e) => {
+  const wins = BrowserWindow.getAllWindows();
+  for (let win of wins) {
+    win.webContents.send('theme-changed', nativeTheme.shouldUseDarkColors);
+  }
+});
 
 // 获取APP当前主题模式
 ipcMain.handle('dark-mode', () => {

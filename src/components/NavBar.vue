@@ -35,37 +35,29 @@
 import { ipcRenderer } from 'electron';
 import { useStore } from "@/store";
 import { Close, Expand, Remove } from '@vicons/ionicons5'
+import { useStorage } from '@vueuse/core';
 
-const store = useStore()
+const mainStore = useStore()
 
 const searchText = ref<string>()
 
 type Theme = 'dark' | 'light' | 'system'
 
-onBeforeMount(async () => {
-  const theme: Theme = await ipcRenderer.invoke('dark-mode');
-
-  if (theme === "system") {
-    const isDark = await ipcRenderer.invoke('should-use-dark-colors')
-    console.log(isDark);
-    store.$patch(state => state.isDarkTheme = isDark)
-  }
-  currentTheme.value = theme
+ipcRenderer.on('theme-changed', (e, isDark: boolean) => {
+  mainStore.$patch(state => state.isDarkTheme = isDark)
 })
 
-const currentTheme = ref<Theme>('system')
+const currentTheme = useStorage<Theme>('theme', 'system')
 const themeOptions = [
   { label: 'dark', value: 'dark' },
   { label: 'light', value: 'light' },
   { label: 'system', value: 'system' }
 ]
 
-watch(() => currentTheme.value, async (newVal: 'dark' | 'light' | 'system') => {
+watch(() => currentTheme.value, (newVal: 'dark' | 'light' | 'system') => {
   ipcRenderer.invoke("dark-mode:change", newVal);
-
-  const useDarkColors = await ipcRenderer.invoke('should-use-dark-colors')
-
-  store.$patch(state => state.isDarkTheme = useDarkColors)
+}, {
+  immediate: true
 })
 
 const close = () => {
