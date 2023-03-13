@@ -1,42 +1,38 @@
 <template>
-  <section class="found">
+  <div class="found box-border h-full p-8">
 
-    <article class="card">
-      <div class="card-inner">
-        <span class="card-pin"></span>
-        <div class="card-image">
-          <img src="https://assets.codepen.io/285131/illustration-hand-with-cigarette-icon.jpg" />
-        </div>
-        <div class="card-content">
-          <div class="card-meta">
-            <span class="card-meta-number">20 songs</span>
-            <button class="card-meta-button">
-              <i class="ai-circle-triangle-right-fill"></i>
-            </button>
-          </div>
-          <h2 class="card-title">Alan Walker</h2>
-        </div>
+    <section class="search max-w-2xl mx-auto">
+      <div class="search-inner">
+        <button class="search-button">
+          <i class="ai-search"></i>
+        </button>
+        <input type="text" class="search-input" v-model="searchText" @keydown.enter="search" placeholder="Search Music" />
       </div>
-    </article>
+    </section>
 
-    <article class="card">
-      <div class="card-inner">
-        <span class="card-pin"></span>
-        <div class="card-image">
-          <img src="https://assets.codepen.io/285131/hand-drawn-monster-milkshake.jpg" />
-        </div>
-        <div class="card-content">
-          <div class="card-meta">
-            <span class="card-meta-number">20 songs</span>
-            <button class="card-meta-button">
-              <i class="ai-circle-triangle-right-fill"></i>
-            </button>
+    <section class="flex flex-wrap justify-between items-center py-8 my-8">
+
+      <article class="card" v-for="item in searchResult" :key="item.id">
+        <div class="card-inner">
+          <span class="card-pin"></span>
+          <div class="card-image">
+            <!-- <img src="https://assets.codepen.io/285131/illustration-hand-with-cigarette-icon.jpg" /> -->
+            <img :src="item.coverImgUrl + '?param=120y120'" />
           </div>
-          <h2 class="card-title">Tim Bergling</h2>
+          <div class="card-content">
+            <div class="card-meta">
+              <span class="card-meta-number">{{ item.trackCount }} songs</span>
+              <button class="card-meta-button">
+                <i class="ai-circle-triangle-right-fill"></i>
+              </button>
+            </div>
+            <h2 class="card-title">{{ item.name }}</h2>
+          </div>
         </div>
-      </div>
-    </article>
-  </section>
+      </article>
+    </section>
+
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -44,11 +40,14 @@ import { useStore } from '@/store'
 import { api } from '@/request/api'
 import { useMessage, useLoadingBar } from 'naive-ui'
 import { onLongPress } from '@vueuse/core'
+import { Playlist } from '@/typings/neteasecloudmusicapi';
 
 const mainStore = useStore()
 const message = useMessage()
 const loadingBar = useLoadingBar()
 
+const searchText = ref<string>('')
+const searchResult = ref<Array<Playlist>>([])
 
 type Cat = {
   name: string
@@ -64,51 +63,55 @@ type Categorie = {
   cats: Array<Cat>
 }
 
-const cats = ref<Array<Cat>>([])
-const categories = ref<Array<Categorie>>([])
-const displayMoreCats = ref(false)
-const isEdit = ref(false)
-
-const getCats = async () => {
-  try {
-    loadingBar.start()
-    const { status, data } = await api.playlist.catlist()
-    if (status !== 200) {
-      message.error('获取分类失败')
-      return
-    }
-    if (data.code !== 200) {
-      message.error(data.msg)
-      return
-    }
-    const categorieMap = new Array<Categorie>()
-    for (const key in data.categories) {
-      if (Object.prototype.hasOwnProperty.call(data.categories, key)) {
-        const element = data.categories[key]
-        const category = Number(key)
-        const categorie: Categorie = {
-          id: category,
-          name: element,
-          cats: data.sub.filter((x: Cat) => x.category == category)
-        }
-        categorieMap.push(categorie)
-        categorie.cats.map((item) => (item.selected = true))
-        cats.value.push(...categorie.cats)
-      }
-    }
-    categories.value = categorieMap
-  } catch (error: any) {
-    message.error(error)
-    loadingBar.error()
-  } finally {
-    loadingBar.finish()
-  }
+const search = async () => {
+  const { data } = await api.playlist.search(searchText.value, 1000);
+  searchResult.value = data.result.playlists as Array<Playlist>;
 }
-onMounted(getCats)
+
+// const cats = ref<Array<Cat>>([])
+// const categories = ref<Array<Categorie>>([])
+// const displayMoreCats = ref(false)
+// const isEdit = ref(false)
+
+// const getCats = async () => {
+//   try {
+//     loadingBar.start()
+//     const { status, data } = await api.playlist.catlist()
+//     if (status !== 200) {
+//       message.error('获取分类失败')
+//       return
+//     }
+//     if (data.code !== 200) {
+//       message.error(data.msg)
+//       return
+//     }
+//     const categorieMap = new Array<Categorie>()
+//     for (const key in data.categories) {
+//       if (Object.prototype.hasOwnProperty.call(data.categories, key)) {
+//         const element = data.categories[key]
+//         const category = Number(key)
+//         const categorie: Categorie = {
+//           id: category,
+//           name: element,
+//           cats: data.sub.filter((x: Cat) => x.category == category)
+//         }
+//         categorieMap.push(categorie)
+//         categorie.cats.map((item) => (item.selected = true))
+//         cats.value.push(...categorie.cats)
+//       }
+//     }
+//     categories.value = categorieMap
+//   } catch (error: any) {
+//     message.error(error)
+//     loadingBar.error()
+//   } finally {
+//     loadingBar.finish()
+//   }
+// }
+// onMounted(getCats)
 
 </script>
-
-<style lang="scss" scoped>
+<style>
 :root {
   --c-gray-100: #fbf8f2;
   --c-gray-200: #fcfdfe;
@@ -126,20 +129,113 @@ onMounted(getCats)
 
   --rotation: -3deg;
 }
+</style>
 
-.found {
+<style lang="scss" scoped>
+.search {
+  position: relative;
+  z-index: 1;
+  transition: 0.15s ease;
 
-  margin-top: 1.5rem;
+  &:hover,
+  &:focus-within {
+    transform: translatey(-2px);
+  }
+}
+
+.search-inner {
   display: flex;
-  padding: 2rem 0.5rem;
+  align-items: center;
+  border: 2px solid var(--c-gray-900);
+  border-radius: 15px;
+  height: 60px;
+  font-size: 1rem;
+  width: 100%;
+  background-color: #fff;
+  position: relative;
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    width: 96%;
+    height: 100%;
+    bottom: -9px;
+    left: calc(50% - 48%);
+    border-radius: 20px;
+    border: 2px solid var(--c-gray-900);
+    background-color: var(--c-gray-100);
+    transition: 0.15s ease;
+  }
+
+  &:hover,
+  &:focus-within {
+    input::placeholder {
+      color: #787878;
+    }
+
+    &:after {
+      transform: translatey(2px);
+    }
+  }
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px 0 0 15px;
+  border: 0;
+  background-color: var(--c-gray-100);
+  position: relative;
+  height: 100%;
+  border-right: 2px solid var(--c-gray-900);
+  width: 70px;
+  transition: 0.15s ease;
+  cursor: pointer;
+
+  i {
+    font-size: 1.25em;
+  }
+
+  &:focus,
+  &:hover {
+    background-color: var(--c-yellow-300);
+    outline: 0;
+  }
+}
+
+.search-input {
+  border: 0;
+  border-radius: 0 15px 15px 0;
+  height: 100%;
+  background-color: #fff;
+  width: 100%;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-weight: 600;
+  font-size: 1.5rem;
+  caret-color: red;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &::placeholder {
+    font-weight: 600;
+    color: var(--c-gray-900);
+    transition: 0.15s ease;
+  }
 }
 
 .card {
   width: 200px;
   transform: rotate(var(--rotation));
   transition: 0.15s ease-out;
+  margin-bottom: 2rem;
 
-  &:nth-child(2) {
+  &:nth-child(2n) {
     margin-top: 1rem;
     --rotation: 5deg;
 

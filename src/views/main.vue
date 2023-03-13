@@ -10,16 +10,18 @@
           :collapsed-icon-size="22" :options="menuOptions" />
       </n-layout-sider>
       <n-layout class="relative h-full">
-        <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component" :key="$route.name" v-if="$route.meta.keepActive" />
-          </keep-alive>
-          <component :is="Component" :key="$route.name" v-if="!$route.meta.keepActive" />
-        </router-view>
-        <Transition name="playbar-animate">
-          <PlayBar v-if="displayPlaybar" />
-        </Transition>
-        <n-back-top />
+        <n-scrollbar>
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component" :key="$route.name" v-if="$route.meta.keepActive" />
+            </keep-alive>
+            <component :is="Component" :key="$route.name" v-if="!$route.meta.keepActive" />
+          </router-view>
+          <Transition name="playbar-animate">
+            <PlayBar v-if="displayPlaybar" />
+          </Transition>
+          <n-back-top />
+        </n-scrollbar>
         <!-- <n-scrollbar :class="['main-scrollbar', store.isDarkTheme ? 'bg-black' : 'bg-white']">
 
         </n-scrollbar> -->
