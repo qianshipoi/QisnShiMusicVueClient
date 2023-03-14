@@ -6,7 +6,7 @@
         <card-list-base :data="tag.playlists" name="id" :skeleton-count="10"
           :is-busy="isBusy && tag.playlists?.length === 0">
           <template #default="{ item }">
-            <playlist-card :playlist="item"></playlist-card>
+            <playlist-card v-model="item"></playlist-card>
           </template>
         </card-list-base>
       </n-tab-pane>

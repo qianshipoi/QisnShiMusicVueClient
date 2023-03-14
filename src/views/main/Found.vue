@@ -6,13 +6,14 @@
         <button class="search-button">
           <i class="ai-search"></i>
         </button>
-        <input type="text" class="search-input" v-model="searchText" @keydown.enter="search" placeholder="Search Music" />
+        <input type="text" class="search-input" autofocus v-model="searchText" @keydown.enter="search"
+          placeholder="Search Music" />
       </div>
     </section>
 
     <section class="flex flex-wrap justify-between items-center py-8 my-8">
 
-      <article class="card" v-for="item in searchResult" :key="item.id">
+      <article class="card" v-for="item in searchResult" :key="item.id" @click="toPlaylistDetailPage(item)">
         <div class="card-inner">
           <span class="card-pin"></span>
           <div class="card-image">
@@ -39,13 +40,13 @@
 import { useStore } from '@/store'
 import { api } from '@/request/api'
 import { useMessage, useLoadingBar } from 'naive-ui'
-import { onLongPress } from '@vueuse/core'
 import { Playlist } from '@/typings/neteasecloudmusicapi';
+import { useRoute, useRouter } from 'vue-router';
 
-const mainStore = useStore()
 const message = useMessage()
 const loadingBar = useLoadingBar()
-
+const route = useRoute()
+const router = useRouter()
 const searchText = ref<string>('')
 const searchResult = ref<Array<Playlist>>([])
 
@@ -64,51 +65,24 @@ type Categorie = {
 }
 
 const search = async () => {
-  const { data } = await api.playlist.search(searchText.value, 1000);
-  searchResult.value = data.result.playlists as Array<Playlist>;
+  if (!searchText.value) {
+    message.warning('请输入想要搜索的内容。')
+    return;
+  }
+  try {
+    loadingBar.start()
+    const { data } = await api.playlist.search(searchText.value, 1000);
+    searchResult.value = data.result.playlists as Array<Playlist>;
+  } catch (error) {
+    loadingBar.error()
+  } finally {
+    loadingBar.finish();
+  }
 }
 
-// const cats = ref<Array<Cat>>([])
-// const categories = ref<Array<Categorie>>([])
-// const displayMoreCats = ref(false)
-// const isEdit = ref(false)
-
-// const getCats = async () => {
-//   try {
-//     loadingBar.start()
-//     const { status, data } = await api.playlist.catlist()
-//     if (status !== 200) {
-//       message.error('获取分类失败')
-//       return
-//     }
-//     if (data.code !== 200) {
-//       message.error(data.msg)
-//       return
-//     }
-//     const categorieMap = new Array<Categorie>()
-//     for (const key in data.categories) {
-//       if (Object.prototype.hasOwnProperty.call(data.categories, key)) {
-//         const element = data.categories[key]
-//         const category = Number(key)
-//         const categorie: Categorie = {
-//           id: category,
-//           name: element,
-//           cats: data.sub.filter((x: Cat) => x.category == category)
-//         }
-//         categorieMap.push(categorie)
-//         categorie.cats.map((item) => (item.selected = true))
-//         cats.value.push(...categorie.cats)
-//       }
-//     }
-//     categories.value = categorieMap
-//   } catch (error: any) {
-//     message.error(error)
-//     loadingBar.error()
-//   } finally {
-//     loadingBar.finish()
-//   }
-// }
-// onMounted(getCats)
+const toPlaylistDetailPage = (item: Playlist) => {
+  router.push({ name: 'Playlist', params: { id: item.id } })
+}
 
 </script>
 <style>

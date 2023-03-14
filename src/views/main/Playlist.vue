@@ -29,11 +29,14 @@
         <SongItem></SongItem>
       </li>
     </ul>
-    <ul v-else style="margin-top:1rem">
+
+    <SongList v-else class="mt-4 mx-4" :model-value="songs" />
+
+    <!-- <ul v-else style="margin-top:1rem">
       <li v-for="song in playlistDetail?.tracks" class="song-item" :key="song.id">
         <SongItem :song="song" @play="play"></SongItem>
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -41,9 +44,10 @@
 import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/request/api'
 import { useMessage } from 'naive-ui'
-import { PlaylistDetail } from '@/typings/neteasecloudmusicapi'
+import { PlaylistDetail, Song } from '@/typings/neteasecloudmusicapi'
 import SongItem from '@/components/SongItem.vue'
 import useLocale from '@/hook/useLocale'
+import SongList from '@/components/SongList.vue'
 
 const {
   i18n: { t }
@@ -52,7 +56,8 @@ const message = useMessage()
 const route = useRoute()
 const router = useRouter()
 const isBusy = ref(true)
-const playlistDetail = ref<PlaylistDetail>()
+const playlistDetail = ref<PlaylistDetail | undefined>()
+const songs = ref<Array<Song>>([])
 
 const getPlaylistDetail = async (id: number) => {
   isBusy.value = true
@@ -60,6 +65,7 @@ const getPlaylistDetail = async (id: number) => {
     const { status, data } = await api.playlist.detail(id)
     if (status === 200 && data.code === 200) {
       playlistDetail.value = data.playlist
+      songs.value = playlistDetail.value?.tracks || []
     } else {
       message.error('获取歌单详细信息异常')
       router.back()

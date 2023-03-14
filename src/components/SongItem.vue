@@ -14,15 +14,15 @@
   <n-card v-else class="wow animate__animated animate__lightSpeedInRight song-item"
     @dblclick="emit('play', song?.id ?? 0)">
     <div style="display:flex;">
-      <n-image fallback-src="https://oss.kuriyama.top/static/akua.png" :src="song.al.picUrl" width="48" height="48"
+      <n-image fallback-src="https://oss.kuriyama.top/static/akua.png" :src="song.album.picUrl" width="48" height="48"
         preview-disabled :alt="song.name" />
       <div class="song-base">
         <n-ellipsis :line-clamp="1" class="song-name">{{ song.name }}</n-ellipsis>
-        <n-text style="font-size:14px">{{ formatArtists(song.ar) }}</n-text>
+        <n-text style="font-size:14px">{{ formatArtists(song.artists) }}</n-text>
       </div>
-      <n-ellipsis :line-clamp="1" class="song-album">{{ song.al.name }}</n-ellipsis>
+      <n-ellipsis :line-clamp="1" class="song-album">{{ song.album.name }}</n-ellipsis>
       <n-icon :component="HeartOutline" :color="themeVars.primaryColor" style="margin:auto 1rem" :size="28"></n-icon>
-      <n-text style="margin: auto 0;font-weight: 800;">{{ formatTime(song.dt) }}</n-text>
+      <n-text style="margin: auto 0;font-weight: 800;">{{ formatTime(song.duration) }}</n-text>
     </div>
   </n-card>
 </template>

@@ -83,6 +83,7 @@ export interface Privilege {
 
 export interface Song {
   album: Album;
+  al: Album;
   alia: Array<string> | undefined;
   artists: Array<Artist>;
   cd: string | undefined;
@@ -91,6 +92,7 @@ export interface Song {
   cp: number;
   djId: number;
   duration: number;
+  dt: number;
   fee: number;
   ftype: number;
   h: Quality | undefined;
