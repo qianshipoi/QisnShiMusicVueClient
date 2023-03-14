@@ -26,6 +26,7 @@ export default {
   settings: {
     dark: '暗黑',
     light: '明亮',
+    system:'跟随系统',
     lang: '语言',
     theme: '主题'
   }

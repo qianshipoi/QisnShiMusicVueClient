@@ -4,6 +4,7 @@
     <n-input v-model:value="searchText" type="text" placeholder="搜索..." class="max-w-md" clearable></n-input>
     <n-select class="w-64" v-model:value="currentTheme" size="medium" :options="themeOptions" />
 
+
     <n-button-group size="small">
       <n-button strong secondary @click="minimize">
         <template #icon>
@@ -36,8 +37,11 @@ import { ipcRenderer } from 'electron';
 import { useStore } from "@/store";
 import { Close, Expand, Remove } from '@vicons/ionicons5'
 import { useStorage } from '@vueuse/core';
+import useLocale from '@/hook/useLocale';
 
 const mainStore = useStore()
+
+const { i18n: { t } } = useLocale()
 
 const searchText = ref<string>()
 
@@ -48,10 +52,11 @@ ipcRenderer.on('theme-changed', (e, isDark: boolean) => {
 })
 
 const currentTheme = useStorage<Theme>('theme', 'system')
+
 const themeOptions = [
-  { label: 'dark', value: 'dark' },
-  { label: 'light', value: 'light' },
-  { label: 'system', value: 'system' }
+  { label: () => t('settings.dark'), value: 'dark' },
+  { label: () => t('settings.light'), value: 'light' },
+  { label: () => t('settings.system'), value: 'system' }
 ]
 
 watch(() => currentTheme.value, (newVal: 'dark' | 'light' | 'system') => {

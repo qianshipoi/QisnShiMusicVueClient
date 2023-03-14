@@ -41,9 +41,12 @@ import PlayBar from '@/components/PlayBar.vue'
 import NavBar from '@/components/NavBar.vue'
 import { useStore } from '@/store'
 import { useMusicStore } from '@/store/music'
+import useLocale from '@/hook/useLocale'
+
 const mainStore = useStore()
 const musicStote = useMusicStore()
 const route = useRoute()
+const { i18n: { t } } = useLocale();
 
 watch(() => route.name, (newVal) => {
   if (newVal?.toString() === "Home") {
@@ -63,9 +66,9 @@ function renderIcon(icon: any) {
 }
 
 const menu = [
-  { name: 'Home', title: '首页', icon: Apps },
-  { name: 'Found', title: '发现', icon: GlobeSharp },
-  { name: 'Settings', title: '设置', icon: Settings }
+  { name: 'Home', title: () => t('nav.home'), icon: Apps },
+  { name: 'Found', title: () => t('nav.found'), icon: GlobeSharp },
+  { name: 'Settings', title: () => t('nav.settings'), icon: Settings }
 ]
 const menuOptions: MenuOption[] = []
 menu.forEach(item => {
@@ -78,7 +81,7 @@ menu.forEach(item => {
             name: item.name
           }
         },
-        { default: () => item.title }
+        { default: () => item.title() }
       ),
     key: item.name,
     icon: renderIcon(item.icon)

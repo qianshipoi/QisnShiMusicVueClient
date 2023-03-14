@@ -26,6 +26,7 @@ export default {
   settings: {
     dark: 'Dark',
     light: 'Light',
+    system:'System',
     lang: 'Lang',
     theme: 'Theme'
   }

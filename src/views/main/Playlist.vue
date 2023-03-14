@@ -32,11 +32,6 @@
 
     <SongList v-else class="mt-4 mx-4" :model-value="songs" />
 
-    <!-- <ul v-else style="margin-top:1rem">
-      <li v-for="song in playlistDetail?.tracks" class="song-item" :key="song.id">
-        <SongItem :song="song" @play="play"></SongItem>
-      </li>
-    </ul> -->
   </div>
 </template>
 
