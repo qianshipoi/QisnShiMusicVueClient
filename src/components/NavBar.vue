@@ -2,7 +2,7 @@
   <div class="nav-bar flex justify-between items-center h-16 px-4 ">
     <h1 class="title">QS</h1>
     <n-input v-model:value="searchText" type="text" placeholder="搜索..." class="max-w-md" clearable></n-input>
-    <n-select class="w-64" v-model:value="currentTheme" size="medium" :options="themeOptions" />
+    <n-select class="w-64" v-model:value="mainStore.currentTheme" size="medium" :options="themeOptions" />
 
     <n-button-group size="small">
       <n-button strong secondary @click="minimize">
@@ -35,30 +35,16 @@
 import { ipcRenderer } from 'electron';
 import { useStore } from "@/store";
 import { Close, Expand, Remove } from '@vicons/ionicons5'
-import { useStorage } from '@vueuse/core';
 
 const mainStore = useStore()
 
 const searchText = ref<string>()
 
-type Theme = 'dark' | 'light' | 'system'
-
-ipcRenderer.on('theme-changed', (e, isDark: boolean) => {
-  mainStore.$patch(state => state.isDarkTheme = isDark)
-})
-
-const currentTheme = useStorage<Theme>('theme', 'system')
 const themeOptions = [
   { label: 'dark', value: 'dark' },
   { label: 'light', value: 'light' },
   { label: 'system', value: 'system' }
 ]
-
-watch(() => currentTheme.value, (newVal: 'dark' | 'light' | 'system') => {
-  ipcRenderer.invoke("dark-mode:change", newVal);
-}, {
-  immediate: true
-})
 
 const close = () => {
   ipcRenderer.send('window-close')

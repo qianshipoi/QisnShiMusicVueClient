@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -35,14 +35,6 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: '/playlists',
-        name: 'Playlists',
-        component: () => import('../views/main/playlists/index.vue'),
-        meta: {
-          keepActive: true
-        }
-      },
-      {
         path: '/playlists/:id',
         name: 'Playlist',
         component: () => import('../views/main/Playlist.vue')
@@ -51,11 +43,6 @@ const routes: Array<RouteRecordRaw> = [
         path: '/found',
         name: 'Found',
         component: () => import('../views/main/Found.vue')
-      },
-      {
-        path: '/search',
-        name: 'Search',
-        component: () => import('../views/main/Search.vue')
       }
     ]
   },
@@ -67,7 +54,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 });
 

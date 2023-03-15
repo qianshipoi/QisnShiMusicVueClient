@@ -6,9 +6,7 @@
     </n-space>
     <n-space>
       <n-text>{{ t('settings.theme') }}</n-text>
-      {{ t('settings.dark') }}
-      <n-switch v-model:value="store.isDarkTheme" size="medium" />
-      {{ t('settings.light') }}
+      <n-select v-model:value="mainStore.currentTheme" size="medium" :options="themeOptions" />
     </n-space>
   </n-space>
 </template>
@@ -17,7 +15,12 @@
 import useLocale from "@/hook/useLocale";
 import { useStore } from "@/store";
 
-const store = useStore()
+const mainStore = useStore()
+const {
+  i18n: { t },
+  currentLocale,
+  changeLocale
+} = useLocale()
 
 const options = [
   {
@@ -29,11 +32,12 @@ const options = [
     value: 'en-US'
   }
 ]
-const {
-  i18n: { t },
-  currentLocale,
-  changeLocale
-} = useLocale()
+
+const themeOptions = [
+  { label: 'dark', value: 'dark' },
+  { label: 'light', value: 'light' },
+  { label: 'system', value: 'system' }
+]
 
 const selectedLocale = ref(currentLocale.value)
 
@@ -44,6 +48,3 @@ const updateLocaleHandle = (newVal: string) => {
 }
 
 </script>
-
-<style scoped>
-</style>
