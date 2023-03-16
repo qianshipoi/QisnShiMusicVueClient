@@ -14,6 +14,7 @@ import WOW from 'wow.js'
 import { useMediaQuery } from '@vueuse/core'
 import { BuiltInGlobalTheme } from 'naive-ui/es/themes/interface'
 import useLocale from './hook/useLocale'
+import { ipcRenderer } from 'electron';
 
 const themeVars = useThemeVars()
 const mainStore = useStore()
@@ -49,12 +50,24 @@ const themeMode = ref<BuiltInGlobalTheme>(darkTheme)
 
 const isLargeScreen = useMediaQuery('(min-width: 500px)')
 
+ipcRenderer.on('theme-changed', (e, isDark: boolean) => {
+  mainStore.$patch(state => state.isDark = isDark)
+})
+
+type Theme = 'dark' | 'light' | 'system'
+
+watch(() => mainStore.currentTheme, (newVal: Theme) => {
+  ipcRenderer.invoke("dark-mode:change", newVal);
+}, {
+  immediate: true
+})
+
 watchEffect(() => {
   mainStore.$patch((x) => (x.isLargeScreen = isLargeScreen.value))
 })
 
 watchEffect(() => {
-  themeMode.value = mainStore.isDarkTheme ? darkTheme : lightTheme
+  themeMode.value = mainStore.isDark ? darkTheme : lightTheme
 })
 </script>
 
@@ -86,7 +99,7 @@ watchEffect(() => {
   right: 0;
   bottom: 0;
   z-index: -1;
-  filter: v-bind('mainStore.isDarkTheme ? `brightness(20%)` : `brightness(1)`');
+  filter: v-bind('mainStore.isDark ? `brightness(20%)` : `brightness(1)`');
   object-fit: cover;
   width: 100vw;
   height: 100vh;

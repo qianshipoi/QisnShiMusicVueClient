@@ -2,10 +2,14 @@ import { dateZhCN, zhCN } from 'naive-ui';
 import { defineStore, createPinia } from 'pinia';
 import piniaPluginPersist from 'pinia-plugin-persist';
 
+type Theme = 'dark' | 'light' | 'system'
+
 export const useStore = defineStore('main', {
   state: () => {
+    const currentTheme: Theme = 'system';
     return {
-      isDarkTheme: false,
+      currentTheme,
+      isDark: false,
       isLargeScreen: true,
       local: zhCN,
       dateLocal: dateZhCN,
@@ -18,7 +22,7 @@ export const useStore = defineStore('main', {
     strategies: [
       {
         storage: localStorage,
-        paths: ['isDarkTheme']
+        paths: ['currentTheme','isDark']
       }
     ]
   }

@@ -171,16 +171,3 @@ export interface Creator {
   followed: boolean;
   nickname: string;
 }
-
-declare type SearchType =
-  | 1
-  | 10
-  | 100
-  | 1000
-  | 1002
-  | 1004
-  | 1006
-  | 1009
-  | 1014
-  | 1018
-  | 2000;

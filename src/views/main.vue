@@ -22,9 +22,6 @@
           </Transition>
           <n-back-top />
         </n-scrollbar>
-        <!-- <n-scrollbar :class="['main-scrollbar', store.isDarkTheme ? 'bg-black' : 'bg-white']">
-
-        </n-scrollbar> -->
       </n-layout>
     </n-layout>
   </n-layout>
