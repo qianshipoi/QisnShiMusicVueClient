@@ -62,7 +62,8 @@ function renderIcon(icon: any) {
 const menu = [
   { name: 'Home', title: '首页', icon: Apps },
   { name: 'Found', title: '发现', icon: GlobeSharp },
-  { name: 'Settings', title: '设置', icon: Settings }
+  { name: 'Settings', title: '设置', icon: Settings },
+  { name: 'Play', title: '播放', icon: Settings }
 ]
 const menuOptions: MenuOption[] = []
 menu.forEach(item => {

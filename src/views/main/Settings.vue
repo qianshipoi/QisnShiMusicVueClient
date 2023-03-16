@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import useLocale from "@/hook/useLocale";
 import { useStore } from "@/store";
+import { player } from '@/utils/player'
 
 const mainStore = useStore()
 const {
