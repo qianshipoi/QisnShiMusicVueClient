@@ -38,9 +38,10 @@ import { useStore } from "@/store";
 import { Close, Expand, Remove } from '@vicons/ionicons5'
 import { useStorage } from '@vueuse/core';
 import useLocale from '@/hook/useLocale';
+import { useRoute } from 'vue-router';
 
 const mainStore = useStore()
-
+const route = useRoute()
 const { i18n: { t } } = useLocale()
 
 const searchText = ref<string>()
@@ -52,7 +53,8 @@ const themeOptions = [
 ]
 
 const close = () => {
-  ipcRenderer.send('window-close')
+  // ipcRenderer.send('window-close')
+  ipcRenderer.send('window-hide', route.query['winId'])
 }
 
 let isFullScreen = false
