@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import { player } from '@/utils/player';
-import { Pause } from '@vicons/ionicons5';
+
 const position = ref<number>(0)
 const duration = ref<number>(0)
 
@@ -31,6 +31,7 @@ const Play = () => {
 const Pause = () => {
   player.pause()
 }
+
 const Stop = () => {
   player.stop()
 }
@@ -38,7 +39,7 @@ const Stop = () => {
 </script>
 
 <template>
-  <div class="-container">
+  <div class="container">
     <input type="file" @input="onInput" />
     {{ position }}
     <br />
@@ -50,6 +51,3 @@ const Stop = () => {
 
   </div>
 </template>
-
-<style lang="scss" scoped>
-</style>

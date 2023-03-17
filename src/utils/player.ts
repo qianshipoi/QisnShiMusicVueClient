@@ -32,6 +32,7 @@ class Player {
   onPause: Dispatcher
   onChange: Dispatcher
   onReady: Dispatcher
+
   constructor() {
     this.audioContext = new AudioContext();
     this.playList = []
@@ -80,11 +81,10 @@ class Player {
   }
 
   play() {
-    console.log(this.playList.length == 0);
-
-    if (this.playList.length === 0 || this.current.source) {
+    if (!this.playList.length || this.current.source) {
       return
     }
+
     const source = this.audioContext.createBufferSource()
     source.buffer = this.current.buffer
     source.onended = this.next.bind(this)
@@ -137,9 +137,11 @@ class Player {
     this.onChange.emit(this)
   }
 
-  get isEmpty(): boolean { return this.current === this.emptyNode }
+  get isEmpty(): boolean {
+    return this.current === this.emptyNode
+  }
 
-  get current(): any {
+  get current(): Song {
     return this.playList[this, this.playIndex] || this.emptyNode
   }
 
@@ -160,7 +162,9 @@ class Player {
     this.play()
   }
 
-  get duration(): number { return this.current.buffer ? this.current.buffer.duration : 0.001 }
+  get duration(): number {
+    return this.current.buffer ? this.current.buffer.duration : 0.001
+  }
 }
 
 export const player = new Player();
