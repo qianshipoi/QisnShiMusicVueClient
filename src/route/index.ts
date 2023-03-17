@@ -27,6 +27,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: '/play',
+        name: 'Play',
+        component: () => import('../views/main/Play.vue'),
+        meta: {
+          keepActive: true
+        }
+      },
+      {
         path: '/favorite',
         name: 'Favorite',
         component: () => import('../views/main/Favorite.vue'),

@@ -65,7 +65,8 @@ function renderIcon(icon: any) {
 const menu = [
   { name: 'Home', title: () => t('nav.home'), icon: Apps },
   { name: 'Found', title: () => t('nav.found'), icon: GlobeSharp },
-  { name: 'Settings', title: () => t('nav.settings'), icon: Settings }
+  { name: 'Settings', title: () => t('nav.settings'), icon: Settings },
+  { name: 'Play', title: () => '播放', icon: Settings }
 ]
 const menuOptions: MenuOption[] = []
 menu.forEach(item => {
