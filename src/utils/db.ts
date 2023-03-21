@@ -87,16 +87,14 @@ export function getTrackDetailFromCache(ids: Array<string>) {
     })
     .toArray()
     .then(tracks => {
-      const result = { songs: [], privileges: [] };
+      const result = { songs: new Array<Song>, privileges: new Array<Privileges> };
       ids.map(id => {
-
-        const one = (tracks).find(t => String(t.id) === id);
-        result.songs.push(one?.detail);
-        result.privileges.push(one?.privileges);
+        const one = (tracks as Array<{ detail: Song, privileges: Privileges }>).find(t => String(t.id) === id);
+        if (one) {
+          result.songs.push(one.detail);
+          result.privileges.push(one.privileges);
+        }
       });
-      if (result.songs.includes(undefined)) {
-        return undefined;
-      }
       return result;
     });
 }
@@ -116,7 +114,7 @@ export function getLyricFromCache(id: number) {
   });
 }
 
-export function cacheAlbum(id: number, album: Album) {
+export function cacheAlbum(id: number, album: any) {
   db.table('album').put({
     id: Number(id),
     album,
@@ -132,10 +130,10 @@ export function getAlbumFromCache(id: number) {
 }
 
 export function countDBSize() {
-  const trackSizes = [];
+  const trackSizes = new Array<number>;
   return db.table('trackSources')
     .each(track => {
-      trackSizes.push(track.source.byteLength);
+      trackSizes.push(track.source.byteLength as number);
     })
     .then(() => {
       const res = {
@@ -155,6 +153,6 @@ export function clearDB() {
     db.tables.forEach(function (table) {
       table.clear();
     });
-    resolve();
+    resolve(null);
   });
 }
