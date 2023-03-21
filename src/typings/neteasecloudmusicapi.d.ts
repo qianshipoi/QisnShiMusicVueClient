@@ -86,6 +86,7 @@ export interface Song {
   al: Album;
   alia: Array<string> | undefined;
   artists: Array<Artist>;
+  ar: Array<Artist>;
   cd: string | undefined;
   cf: string | undefined;
   copyright: number;

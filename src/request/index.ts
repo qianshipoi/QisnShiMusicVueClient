@@ -1,4 +1,6 @@
 import axios, { AxiosRequestConfig, Method } from 'axios';
+import router from '@/route';
+import { doLogout } from '@/utils/auth';
 
 interface PendingType {
   url?: string;
@@ -48,11 +50,29 @@ instance.interceptors.request.use(
         cancel: c
       });
     });
+
     return config;
   },
   (error) => {
     return Promise.reject(error.data.error.message);
   }
 );
+
+instance.interceptors.response.use(response => {
+  const res = response.data;
+  return res;
+}, error => {
+  const response = error.response
+  const data = response.data;
+
+  if (response && typeof data === 'object' && data.code === 301 && data.msg === '需要登录') {
+    // token has expired.
+
+    doLogout();
+
+    // 导航到登录页面
+    router.push({ name: 'login' })
+  }
+})
 
 export default instance;

@@ -13,7 +13,10 @@ export const useStore = defineStore('main', {
       isLargeScreen: true,
       local: zhCN,
       dateLocal: dateZhCN,
-      displayPlayBar: false
+      displayPlayBar: false,
+      loginMode: null,
+      user: {},
+      likedSongPlaylistId: undefined
     };
   },
   actions: {},
@@ -22,7 +25,7 @@ export const useStore = defineStore('main', {
     strategies: [
       {
         storage: localStorage,
-        paths: ['currentTheme','isDark']
+        paths: ['currentTheme', 'isDark']
       }
     ]
   }
