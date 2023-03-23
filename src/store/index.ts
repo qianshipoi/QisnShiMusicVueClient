@@ -15,7 +15,9 @@ export const useStore = defineStore('main', {
       dateLocal: dateZhCN,
       displayPlayBar: false,
       loginMode: null,
-      user: {},
+      user: {
+        vipType: 0
+      },
       likedSongPlaylistId: undefined
     };
   },

@@ -89,7 +89,7 @@ export function getTrackDetailFromCache(ids: Array<string>) {
     .then(tracks => {
       const result = { songs: new Array<Song>, privileges: new Array<Privileges> };
       ids.map(id => {
-        const one = (tracks as Array<{ detail: Song, privileges: Privileges }>).find(t => String(t.id) === id);
+        const one = (tracks as Array<{ id: number, detail: Song, privileges: Privileges }>).find(t => String(t.id) === id);
         if (one) {
           result.songs.push(one.detail);
           result.privileges.push(one.privileges);

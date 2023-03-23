@@ -1,5 +1,7 @@
 import request from '@/request'
 import { Privilege, Song } from '@/typings/neteasecloudmusicapi';
+import { mapTrackPlayableStatus } from '@/utils/common';
+import { cacheLyric, getLyricFromCache, getTrackDetailFromCache } from '@/utils/db';
 
 /**
  * 获取音乐 url
@@ -45,11 +47,11 @@ export function getTrackDetail(ids: string) {
 
       })
 
-      data.songs.map(song => {
-        const privileges = data.privileges.find(t => t.id === song.id);
-        cacheTrackDetail(song, privileges);
-      });
-      data.songs = mapTrackPlayableStatus(data.songs, data.privileges);
+      // data.songs.map(song => {
+      //   const privileges = data.privileges.find(t => t.id === song.id);
+      //   cacheTrackDetail(song, privileges);
+      // });
+      data.data.songs = mapTrackPlayableStatus(data.data.songs, data.data.privileges);
       return data;
     });
   };
@@ -73,7 +75,7 @@ export function getTrackDetail(ids: string) {
  * 说明 : 调用此接口 , 传入音乐 id 可获得对应音乐的歌词 ( 不需要登录 )
  * @param {number} id - 音乐 id
  */
-export function getLyric(id) {
+export function getLyric(id: number) {
   const fetchLatest = () => {
     return request({
       url: '/lyric',
@@ -82,7 +84,7 @@ export function getLyric(id) {
         id,
       },
     }).then(result => {
-      cacheLyric(id, result);
+      cacheLyric(id, String(result));
       return result;
     });
   };
@@ -99,7 +101,7 @@ export function getLyric(id) {
  * 说明 : 调用此接口 , 可获取新歌速递
  * @param {number} type - 地区类型 id, 对应以下: 全部:0 华语:7 欧美:96 日本:8 韩国:16
  */
-export function topSong(type) {
+export function topSong(type: number) {
   return request({
     url: '/top/song',
     method: 'get',
@@ -118,7 +120,7 @@ export function topSong(type) {
  * @param {number} params.id
  * @param {boolean=} [params.like]
  */
-export function likeATrack(params) {
+export function likeATrack(params: { id: number, like: boolean, timestamp?: number }) {
   params.timestamp = new Date().getTime();
   return request({
     url: '/like',
@@ -138,7 +140,7 @@ export function likeATrack(params) {
  * @param {number} params.sourceid
  * @param {number=} params.time
  */
-export function scrobble(params) {
+export function scrobble(params: { id: number, sourceid: number, time: number, timestamp?: number }) {
   params.timestamp = new Date().getTime();
   return request({
     url: '/scrobble',
