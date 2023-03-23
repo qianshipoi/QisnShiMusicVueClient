@@ -52,8 +52,8 @@ export default class {
   private _shuffle: boolean
   private _volume: number
   private _volumeBeforeMuted: number
-  private _presonalFMLoading: boolean
-  private _presonalFMNextLoading: boolean
+  private _personalFMLoading: boolean
+  private _personalFMNextLoading: boolean
   private _list: number[]
   private _current: number
   private _shuffledList: number[]
@@ -63,7 +63,7 @@ export default class {
   private _playNextList: number[]
   private _isPersonalFM: boolean
   private _personalFMTrack: Track
-  private _presonalFMNextTrack: Track
+  private _personalFMNextTrack: Track | undefined
   private createdBlobRecords: string[]
   private _howler: null | Howl
   constructor() {
@@ -74,8 +74,8 @@ export default class {
     this._shuffle = false
     this._volume = 1
     this._volumeBeforeMuted = 1
-    this._presonalFMLoading = false
-    this._presonalFMNextLoading = false
+    this._personalFMLoading = false
+    this._personalFMNextLoading = false
 
     this._list = []
     this._current = 0
@@ -86,7 +86,7 @@ export default class {
     this._playNextList = []
     this._isPersonalFM = false
     this._personalFMTrack = { id: 0, dt: 0, name: '' }
-    this._presonalFMNextTrack = { id: 0, dt: 0, name: '' }
+    this._personalFMNextTrack = { id: 0, dt: 0, name: '' }
 
     this.createdBlobRecords = []
 
@@ -180,7 +180,7 @@ export default class {
     return this._isPersonalFM
   }
   get personalFMTrack() {
-    return this._presonalFMNextTrack
+    return this._personalFMNextTrack
   }
   get currentTrackDuration() {
     const trackDuration = this._currentTrack.dt || 1000
@@ -210,13 +210,13 @@ export default class {
     this._setIntervals()
 
     if (this._personalFMTrack.id === 0 ||
-      this._presonalFMNextTrack.id === 0 ||
-      this._personalFMTrack.id === this._presonalFMNextTrack.id) {
-      // personalFM().then(result => {
-      //   this._personalFMTrack = result.data[0]
-      //   this._presonalFMNextTrack = result.data[1]
-      //   return this._personalFMTrack
-      // })
+      this._personalFMNextTrack?.id === 0 ||
+      this._personalFMTrack.id === this._personalFMNextTrack?.id) {
+      personalFM().then(result => {
+        this._personalFMTrack = result.data[0]
+        this._personalFMNextTrack = result.data[1]
+        return this._personalFMTrack
+      })
     }
   }
 
