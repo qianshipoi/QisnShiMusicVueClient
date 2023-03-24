@@ -1,6 +1,36 @@
-import request from '@/request'
+import instance from '@/utils/request'
+import { NeteaseBaseResponse, Playlist, PlaylistDetail, Privilege } from '@/utils/neteasecloudmusicapi';
 import { mapTrackPlayableStatus } from '@/utils/common'
-import { number } from '@intlify/core-base';
+
+
+export function detail(id: number) {
+  return instance.get<{
+    fromUserCount: number
+    fromUsers: null | any
+    playlist: PlaylistDetail
+    privileges: Array<Privilege>
+    relatedVideos: null | any
+    resEntrance: null | any
+    sharedPrivilege: null | any
+    songFromUsers: null | any
+    urls: null | any
+  } & NeteaseBaseResponse>('/playlist/detail', { params: { id } })
+}
+
+export function topPlaylistHighquality(params: { cat: string, limit?: number, before?: number }) {
+  return instance.get<{
+    playlists: Array<Playlist>
+    lasttime: number
+    more: boolean
+    total: number
+  } & NeteaseBaseResponse>('/top/playlist/highquality', {
+    params
+  })
+}
+
+export function hot() {
+  return instance.get<any & NeteaseBaseResponse>('/playlist/hot')
+}
 
 /**
  * 推荐歌单
@@ -11,7 +41,7 @@ import { number } from '@intlify/core-base';
  * @param {number=} params.limit
  */
 export function recommendPlaylist(params: { limit?: number }) {
-  return request({
+  return instance({
     url: '/personalized',
     method: 'get',
     params,
@@ -24,7 +54,7 @@ export function recommendPlaylist(params: { limit?: number }) {
  * @param {number=} params.limit
  */
 export function dailyRecommendPlaylist(params: { limit?: number }) {
-  return request({
+  return instance({
     url: '/recommend/resource',
     method: 'get',
     params: {
@@ -46,7 +76,7 @@ export function dailyRecommendPlaylist(params: { limit?: number }) {
 export function getPlaylistDetail(id: number, noCache = false) {
   let params: { id: number, timestamp?: number } = { id };
   if (noCache) params.timestamp = new Date().getTime();
-  return request({
+  return instance({
     url: '/playlist/detail',
     method: 'get',
     params,
@@ -72,7 +102,7 @@ export function getPlaylistDetail(id: number, noCache = false) {
  * @param {number} params.before
  */
 export function highQualityPlaylist(params: { cat: string, limit?: number, before?: number }) {
-  return request({
+  return instance({
     url: '/top/playlist/highquality',
     method: 'get',
     params,
@@ -91,7 +121,7 @@ export function highQualityPlaylist(params: { cat: string, limit?: number, befor
  * @param {number=} params.limit
  */
 export function topPlaylist(params: { order?: string, cat?: string, limit?: number }) {
-  return request({
+  return instance({
     url: '/top/playlist',
     method: 'get',
     params,
@@ -103,7 +133,7 @@ export function topPlaylist(params: { order?: string, cat?: string, limit?: numb
  * 说明 : 调用此接口,可获取歌单分类,包含 category 信息
  */
 export function playlistCatlist() {
-  return request({
+  return instance({
     url: '/playlist/catlist',
     method: 'get',
   });
@@ -114,7 +144,7 @@ export function playlistCatlist() {
  * 说明 : 调用此接口,可获取所有榜单 接口地址 : /toplist
  */
 export function toplists() {
-  return request({
+  return instance({
     url: '/toplist',
     method: 'get',
   });
@@ -131,7 +161,7 @@ export function toplists() {
  */
 export function subscribePlaylist(params: { t: number, id: number, timestamp?: number }) {
   params.timestamp = new Date().getTime();
-  return request({
+  return instance({
     url: '/playlist/subscribe',
     method: 'post',
     params,
@@ -145,7 +175,7 @@ export function subscribePlaylist(params: { t: number, id: number, timestamp?: n
  *  * @param {number} id
  */
 export function deletePlaylist(id: number) {
-  return request({
+  return instance({
     url: '/playlist/delete',
     method: 'post',
     params: { id },
@@ -165,7 +195,7 @@ export function deletePlaylist(id: number) {
  */
 export function createPlaylist(params: { name: string, privacy?: number, type?: string, timestamp?: number }) {
   params.timestamp = new Date().getTime();
-  return request({
+  return instance({
     url: '/playlist/create',
     method: 'post',
     params,
@@ -183,7 +213,7 @@ export function createPlaylist(params: { name: string, privacy?: number, type?: 
  */
 export function addOrRemoveTrackFromPlaylist(params: { op: string, pid: string, timestamp?: number }) {
   params.timestamp = new Date().getTime();
-  return request({
+  return instance({
     url: '/playlist/tracks',
     method: 'post',
     params,
@@ -198,7 +228,7 @@ export function addOrRemoveTrackFromPlaylist(params: { op: string, pid: string, 
  * @param {string} params.pid
  */
 export function dailyRecommendTracks() {
-  return request({
+  return instance({
     url: '/recommend/songs',
     method: 'get',
     params: { timestamp: new Date().getTime() },
@@ -222,7 +252,7 @@ export function dailyRecommendTracks() {
  * @param {number=} params.pid
  */
 export function intelligencePlaylist(params: { id: number, pid: number }) {
-  return request({
+  return instance({
     url: '/playmode/intelligence/list',
     method: 'get',
     params,

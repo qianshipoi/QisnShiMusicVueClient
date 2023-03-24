@@ -1,7 +1,24 @@
-import request from '@/request'
-import { Privilege, Song } from '@/typings/neteasecloudmusicapi';
+import request from '@/utils/request'
+import { NeteaseBaseResponse, Privilege, Song } from '@/utils/neteasecloudmusicapi';
 import { mapTrackPlayableStatus } from '@/utils/common';
 import { cacheLyric, getLyricFromCache, getTrackDetailFromCache } from '@/utils/db';
+
+
+
+/**
+ * 新歌速递
+ * 说明 : 调用此接口 , 可获取新歌速递
+ * @param {number} type - 地区类型 id, 对应以下: 全部:0 华语:7 欧美:96 日本:8 韩国:16
+ */
+export function topSong(type: number) {
+  return request.get<{
+    data: Array<Song>
+  } & NeteaseBaseResponse>('/top/song', {
+    params: {
+      type
+    }
+  })
+}
 
 /**
  * 获取音乐 url
@@ -93,21 +110,6 @@ export function getLyric(id: number) {
 
   return getLyricFromCache(id).then(result => {
     return result ?? fetchLatest();
-  });
-}
-
-/**
- * 新歌速递
- * 说明 : 调用此接口 , 可获取新歌速递
- * @param {number} type - 地区类型 id, 对应以下: 全部:0 华语:7 欧美:96 日本:8 韩国:16
- */
-export function topSong(type: number) {
-  return request({
-    url: '/top/song',
-    method: 'get',
-    params: {
-      type,
-    },
   });
 }
 

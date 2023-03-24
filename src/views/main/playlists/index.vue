@@ -15,13 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import { api } from '@/request/api'
-import { PlaylistTag, Playlist } from '@/typings/neteasecloudmusicapi'
+import { PlaylistTag, Playlist } from '@/utils/neteasecloudmusicapi'
 import { useMessage } from 'naive-ui'
 import PlaylistCard from '@/components/PlaylistCard.vue'
 import CardListBase from '@/components/CardListBase.vue'
 import { useStore } from '@/store'
 import useLocale from '@/hook/useLocale'
+import { topPlaylistHighquality, hot } from '@/api/playlist'
 
 const message = useMessage()
 const mainStore = useStore()
@@ -50,7 +50,8 @@ const tabsChanged = (val: number) => {
 const getHot = async () => {
   isBusy.value = true
   try {
-    const { status, data } = await api.playlist.hot()
+
+    const { status, data } = await hot()
     if (status === 200 && data.code === 200) {
       tags.value = data.tags
     }
@@ -62,11 +63,8 @@ const getHot = async () => {
 const getPlaylist = async (tag: PlaylistTag) => {
   isBusy.value = true
   try {
-    const { status, data } = await api.playlist.topPlaylistHighquality(
-      tag.name,
-      undefined,
-      undefined
-    )
+    const { status, data } = await topPlaylistHighquality({ cat: tag.name })
+
     if (status === 200 && data.code === 200) {
       tag.playlists = data.playlists.map((playlist: Playlist) =>
         formatPlaylistImage(playlist)

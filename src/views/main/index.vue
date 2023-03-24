@@ -26,9 +26,11 @@ import TopArtists from '@/components/TopArtists.vue';
 import TopSongs from '@/components/TopSongs.vue'
 import PlayCard from '@/components/PlayCard.vue'
 import TopPlaylists from '@/components/TopPlaylists.vue';
-import { api } from '@/request/api';
-import { Artist, Playlist, Song } from '@/typings/neteasecloudmusicapi';
+import { Artist, Playlist, Song } from '@/utils/neteasecloudmusicapi';
 import { useThemeVars } from 'naive-ui'
+import { topPlaylistHighquality } from '@/api/playlist';
+import { topArtists } from '@/api/artist'
+import { topSong } from '@/api/track'
 
 const playlists = shallowRef<Array<Playlist>>([])
 const artists = shallowRef<Array<Artist>>([]);
@@ -36,29 +38,31 @@ const songs = ref<Array<Song>>([]);
 
 const themeVars = useThemeVars()
 
-onMounted(async () => {
-  getArtists();
-  getSongs();
-  getHot()
+onMounted(() => {
+  getData()
 })
 
-const getHot = async () => {
-  const { data } = await api.playlist.topPlaylistHighquality('华语')
-  playlists.value = data.playlists as Array<Playlist>
+const getData = async () => {
+  await Promise.all([getHot(), getArtists(), getSongs()])
 }
 
-const getArtists = async () => {
-  const { data } = await api.playlist.topArtists({ limit: 6 })
-  artists.value = data.artists
+const getHot = () => {
+  return topPlaylistHighquality({ cat: '华语' }).then(data => {
+    playlists.value = data.data.playlists
+  })
+}
+
+const getArtists = () => {
+  return topArtists({ limit: 6 }).then(data => {
+    artists.value = data.data.artists
+  })
 }
 
 const getSongs = async () => {
-  const { data } = await api.playlist.topSong(7)
-
-  const songsData = (data.data as Array<Song>)
-
-  songsData.splice(0, 6).forEach(item => {
-    songs.value.push(item)
+  return topSong(7).then(data => {
+    data.data.data.splice(0, 6).forEach(item => {
+      songs.value.push(item)
+    })
   })
 }
 

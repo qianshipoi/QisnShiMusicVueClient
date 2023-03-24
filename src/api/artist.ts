@@ -1,4 +1,5 @@
-import request from '@/request'
+import request from '@/utils/request'
+import { Artist, NeteaseBaseResponse } from '@/utils/neteasecloudmusicapi';
 import { mapTrackPlayableStatus } from '@/utils/common'
 
 /**
@@ -62,6 +63,16 @@ export function toplistOfArtists(type = null) {
     params,
   });
 }
+
+
+export function topArtists(params: { limit?: number, offset?: number }) {
+  return request.get<{
+    more: boolean
+    artists: Array<Artist>
+  } & NeteaseBaseResponse>('/top/artists', { params })
+}
+
+
 /**
  * 获取歌手 mv
  * 说明 : 调用此接口 , 传入歌手 id, 可获得歌手 mv 信息 , 具体 mv 播放地址可调 用/mv传入此接口获得的 mvid 来拿到 , 如 : /artist/mv?id=6452,/mv?mvid=5461064

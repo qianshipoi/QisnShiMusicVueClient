@@ -12,12 +12,12 @@
 </template>
 
 <script setup lang="ts">
-import { api } from '@/request/api'
 import { useMessage, useLoadingBar } from 'naive-ui'
-import { Playlist } from '@/typings/neteasecloudmusicapi';
+import { Playlist } from '@/utils/neteasecloudmusicapi';
 import { useRouter } from 'vue-router';
 import CartoonPlaylist from '@/components/cartoon/CartoonPlaylist.vue';
 import CartoonSearchBox from '@/components/cartoon/CartoonSearchBox.vue';
+import { cloudsearch } from '@/api/others'
 
 const message = useMessage()
 const loadingBar = useLoadingBar()
@@ -46,7 +46,7 @@ const search = async () => {
   }
   try {
     loadingBar.start()
-    const { data } = await api.playlist.search(searchText.value, 1000);
+    const { data } = await cloudsearch({ keywords: searchText.value, type: 1000 });
     searchResult.value = data.result.playlists as Array<Playlist>;
   } catch (error) {
     loadingBar.error()

@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { Playlist } from '@/typings/neteasecloudmusicapi';
+import { Playlist } from '@/utils/neteasecloudmusicapi';
 
 defineProps<{
   modelValue: Playlist

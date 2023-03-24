@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { Playlist } from '@/typings/neteasecloudmusicapi';
+import { Playlist } from '@/utils/neteasecloudmusicapi';
 import { NScrollbar, useThemeVars } from 'naive-ui'
 import PlaylistCard from '@/components/PlaylistCard.vue'
 import GroupHeader from '@/components/GroupHeader.vue'

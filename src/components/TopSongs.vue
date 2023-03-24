@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { Song } from '@/typings/neteasecloudmusicapi';
+import { Song } from '@/utils/neteasecloudmusicapi';
 import GroupHeader from './GroupHeader.vue';
 import SongList from './SongList.vue';
 

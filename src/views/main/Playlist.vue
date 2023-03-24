@@ -37,12 +37,12 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import { api } from '@/request/api'
 import { useMessage } from 'naive-ui'
-import { PlaylistDetail, Song } from '@/typings/neteasecloudmusicapi'
+import { PlaylistDetail, Song } from '@/utils/neteasecloudmusicapi'
 import SongItem from '@/components/SongItem.vue'
 import useLocale from '@/hook/useLocale'
 import SongList from '@/components/SongList.vue'
+import { detail } from '@/api/playlist'
 
 const {
   i18n: { t }
@@ -57,7 +57,7 @@ const songs = ref<Array<Song>>([])
 const getPlaylistDetail = async (id: number) => {
   isBusy.value = true
   try {
-    const { status, data } = await api.playlist.detail(id)
+    const { status, data } = await detail(id)
     if (status === 200 && data.code === 200) {
       playlistDetail.value = data.playlist
       songs.value = playlistDetail.value?.tracks || []

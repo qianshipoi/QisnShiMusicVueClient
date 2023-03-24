@@ -1,4 +1,4 @@
-import request from "@/request";
+import request from "@/utils/request";
 import { mapTrackPlayableStatus } from "@/utils/common";
 
 /**
@@ -17,6 +17,18 @@ import { mapTrackPlayableStatus } from "@/utils/common";
  * @param {number=} params.type
  */
 export function search(params: { keywords: string, limit?: number, offset?: number, type?: number }) {
+  return request({
+    url: '/search',
+    method: 'get',
+    params,
+  }).then(data => {
+    if (data.data.result?.song !== undefined)
+      data.data.result.song.songs = mapTrackPlayableStatus(data.data.result.song.songs);
+    return data;
+  });
+}
+
+export function cloudsearch(params: { keywords: string, limit?: number, offset?: number, type?: number }) {
   return request({
     url: '/search',
     method: 'get',

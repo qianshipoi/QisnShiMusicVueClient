@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { Artist } from '@/typings/neteasecloudmusicapi';
+import { Artist } from '@/utils/neteasecloudmusicapi';
 import GroupHeader from './GroupHeader.vue';
 
 const props = defineProps<{

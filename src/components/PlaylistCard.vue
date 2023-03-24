@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { Playlist } from '@/typings/neteasecloudmusicapi';
+import { Playlist } from '@/utils/neteasecloudmusicapi';
 import { useThemeVars } from 'naive-ui'
 import IconButton from './IconButton.vue';
 

@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { Artist } from '@/typings/neteasecloudmusicapi'
+import { Artist } from '@/utils/neteasecloudmusicapi'
 import { useThemeVars } from 'naive-ui'
 
 type Props = {

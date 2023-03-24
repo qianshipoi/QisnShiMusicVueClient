@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { Song } from '@/typings/neteasecloudmusicapi';
+import { Song } from '@/utils/neteasecloudmusicapi';
 import IconButton from './IconButton.vue';
 import { useThemeVars } from 'naive-ui'
 import { CogSharp, PlaySkipBack, PlaySkipForward, Repeat, Shuffle } from '@vicons/ionicons5'

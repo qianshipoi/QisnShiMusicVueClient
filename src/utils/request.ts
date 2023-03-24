@@ -59,8 +59,7 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(response => {
-  const res = response.data;
-  return res;
+  return response;
 }, error => {
   const response = error.response
   const data = response.data;

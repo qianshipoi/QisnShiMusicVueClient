@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Dexie from 'dexie'
 import { useStore } from '@/store'
-import { Song } from '@/typings/neteasecloudmusicapi'
+import { Song } from '@/utils/neteasecloudmusicapi'
 import { Privileges } from 'electron'
 
 

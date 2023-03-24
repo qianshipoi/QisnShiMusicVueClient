@@ -1,11 +1,15 @@
-import { List } from 'lodash';
-import { boolean, number } from 'yargs';
+export interface NeteaseBaseResponse {
+  code: number
+  msg?: string,
+  message?: string
+}
 
 export interface PlaylistTag {
   id: number;
   name: string;
   playlists: Array<Playlist> | undefined;
 }
+
 
 export interface Playlist {
   id: number;

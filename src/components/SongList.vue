@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { Album, Song } from '@/typings/neteasecloudmusicapi';
+import { Album, Song } from '@/utils/neteasecloudmusicapi';
 import { useThemeVars } from 'naive-ui';
 import IconButton from './IconButton.vue';
 import { FolderOpen } from '@vicons/ionicons5'

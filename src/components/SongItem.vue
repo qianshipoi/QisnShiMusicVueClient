@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { HeartOutline } from '@vicons/ionicons5'
 import { useThemeVars } from 'naive-ui'
-import { Song, Artist } from '@/typings/neteasecloudmusicapi'
+import { Song, Artist } from '@/utils/neteasecloudmusicapi'
 import { addPreZero } from '@/utils'
 
 type Props = {
