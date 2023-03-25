@@ -1,8 +1,7 @@
 import axios from 'axios'
 import Dexie from 'dexie'
 import { useStore } from '@/store'
-import { Song } from '@/utils/neteasecloudmusicapi'
-import { Privileges } from 'electron'
+import { Privilege, Song } from '@/utils/neteasecloudmusicapi'
 
 
 const db = new Dexie('qianshimusic')
@@ -71,7 +70,7 @@ export function getTrackSource(id: number) {
   });
 }
 
-export function cacheTrackDetail(track: Song, privileges: Privileges) {
+export function cacheTrackDetail(track: Song, privileges: Privilege) {
   db.table('trackDetail').put({
     id: track.id,
     detail: track,
@@ -87,9 +86,9 @@ export function getTrackDetailFromCache(ids: Array<string>) {
     })
     .toArray()
     .then(tracks => {
-      const result = { songs: new Array<Song>, privileges: new Array<Privileges> };
+      const result = { songs: new Array<Song>, privileges: new Array<Privilege> };
       ids.map(id => {
-        const one = (tracks as Array<{ id: number, detail: Song, privileges: Privileges }>).find(t => String(t.id) === id);
+        const one = (tracks as Array<{ id: number, detail: Song, privileges: Privilege }>).find(t => String(t.id) === id);
         if (one) {
           result.songs.push(one.detail);
           result.privileges.push(one.privileges);
