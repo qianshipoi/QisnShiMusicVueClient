@@ -10,7 +10,7 @@ declare module 'wow.js' {
     resetAnimation?: boolean
   }
   export default class WOW {
-    constructor(options?: WowOptions): this
+    constructor(options?: WowOptions)
     init()
   }
 }
