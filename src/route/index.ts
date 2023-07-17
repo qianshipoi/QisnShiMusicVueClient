@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -62,8 +62,22 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 });
+router.beforeEach((to, from, next) => {
+  const winId = from.query['winId']
+  if (winId && to.query['winId'] !== winId) {
+    next({
+      path: to.path,
+      query: {
+        ...to.query,
+        winId,
+      },
+    });
+  } else {
+    next();
+  }
+})
 
 export default router;

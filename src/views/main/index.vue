@@ -15,7 +15,6 @@
           <TopArtists :model-value="artists" />
           <PlayCard />
         </n-space>
-
       </div>
     </n-grid-item>
   </n-grid>

@@ -10,6 +10,7 @@ import 'animate.css/animate.compat.css';
 import './assets/css/init.css';
 import './assets/css/index.css';
 import './assets/css/preflight.css';
+import 'normalize.css/normalize.css'
 
 const app = createApp(App);
 app.use(store);

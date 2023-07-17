@@ -50,7 +50,9 @@ export function doLogout() {
   const store = useStore()
   store.$patch(state => {
     state.loginMode = null
-    state.user = {}
+    state.user = {
+      vipType: 0
+    }
     state.likedSongPlaylistId = undefined;
   })
 }

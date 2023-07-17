@@ -83,8 +83,12 @@ watchEffect(() => {
 </template>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 #app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
+  font-family: sans-serif, Avenir, Helvetica, Arial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;

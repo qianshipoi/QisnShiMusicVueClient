@@ -125,7 +125,6 @@ export default class {
     }
   }
 
-
   get volume() {
     return this._volume
   }
@@ -146,6 +145,7 @@ export default class {
   get current() {
     return this._shuffle ? this._shuffledCurrent : this._current
   }
+
   set current(current) {
     if (this._shuffle) {
       this._shuffledCurrent = current
@@ -165,6 +165,7 @@ export default class {
   get currentTrack() {
     return this._currentTrack
   }
+
   get currentTrackId() {
     return this._currentTrack?.id ?? 0
   }
@@ -172,6 +173,7 @@ export default class {
   get playlistSource() {
     return this._playlistSource
   }
+
   get playNextList() {
     return this._playNextList
   }
@@ -179,6 +181,7 @@ export default class {
   get isPersonalFM() {
     return this._isPersonalFM
   }
+
   get personalFMTrack() {
     return this._personalFMNextTrack
   }
@@ -433,6 +436,7 @@ export default class {
       this._getAudioSource(track)
     })
   }
+
   private _updateMediaSessionMetaData(track: Track) {
     if ('mediaSession' in navigator === false) {
       return;
@@ -473,6 +477,7 @@ export default class {
       });
     }
   }
+
   private _playNextTrack(isPersonal: boolean) {
     if (isPersonal) {
       this.playNextFMTrack();
@@ -493,6 +498,7 @@ export default class {
       this._playNextTrack(this.isPersonalFM);
     }
   }
+
   private _loadPersonalFMNextTrack() {
     if (this._personalFMNextLoading) {
       return [false, undefined];
@@ -572,6 +578,7 @@ export default class {
     this._loadPersonalFMNextTrack();
     return true;
   }
+
   playPrevTrack() {
     const [trackID, index] = this._getPrevTrack();
     if (trackID === undefined) return false;
@@ -583,6 +590,7 @@ export default class {
     );
     return true;
   }
+
   saveSelfToLocalStorage() {
     let player: {
       [key: string]: any
@@ -604,6 +612,7 @@ export default class {
       this._pauseDiscordPresence(this._currentTrack);
     });
   }
+
   play() {
     if (this._howler?.playing()) return;
 
@@ -636,6 +645,7 @@ export default class {
       this.play();
     }
   }
+
   seek(time: number | null = null) {
     if (time !== null) {
       this._howler?.seek(time);
@@ -644,6 +654,7 @@ export default class {
     }
     return this._howler === null ? 0 : this._howler.seek();
   }
+
   mute() {
     if (this.volume === 0) {
       this.volume = this._volumeBeforeMuted;
@@ -652,6 +663,7 @@ export default class {
       this.volume = 0;
     }
   }
+
   setOutputDevice() {
     // if (this._howler?._sounds.length <= 0 || !this._howler?._sounds[0]._node) {
     //   return;
@@ -681,12 +693,14 @@ export default class {
       this._replaceCurrentTrack(autoPlayTrackID);
     }
   }
+
   playAlbumByID(id: number, trackID: 'first' | number = 'first') {
     getAlbum(id).then(data => {
       let trackIDs = (data.songs as { id: number }[]).map(t => t.id);
       this.replacePlaylist(trackIDs, id, 'album', trackID);
     });
   }
+
   playPlaylistByID(id: number, trackID: 'first' | number = 'first', noCache = false) {
     console.debug(
       `[debug][Player.js] playPlaylistByID 👉 id:${id} trackID:${trackID} noCache:${noCache}`
@@ -696,18 +710,21 @@ export default class {
       this.replacePlaylist(trackIDs, id, 'playlist', trackID);
     });
   }
+
   playArtistByID(id: number, trackID: number | 'first' = 'first') {
     getArtist(id).then(data => {
       let trackIDs = (data.data.hotSongs as { id: number }[]).map(t => t.id);
       this.replacePlaylist(trackIDs, id, 'artist', trackID);
     });
   }
+
   playTrackOnListByID(id: number, listName = 'default') {
     if (listName === 'default') {
       this._current = this._list.findIndex(t => t === id);
     }
     this._replaceCurrentTrack(id);
   }
+
   playIntelligenceListById(id: number, trackID: number | 'first' = 'first', noCache = false) {
     getPlaylistDetail(id, noCache).then(data => {
       const randomId = Math.floor(
@@ -720,12 +737,14 @@ export default class {
       });
     });
   }
+
   addTrackToPlayNext(trackID: number, playNow = false) {
     this._playNextList.push(trackID);
     if (playNow) {
       this.playNextTrack();
     }
   }
+
   playPersonalFM() {
     this._isPersonalFM = true;
     if (!this._enabled) this._enabled = true;
@@ -735,6 +754,7 @@ export default class {
       this.playOrPause();
     }
   }
+
   async moveToFMTrash() {
     this._isPersonalFM = true;
     let id = this._personalFMTrack.id;
@@ -765,12 +785,14 @@ export default class {
     //   ipcRenderer?.send('switchRepeatMode', this.repeatMode);
     // }
   }
+
   switchShuffle() {
     this.shuffle = !this.shuffle;
     // if (isCreateMpris) {
     //   ipcRenderer?.send('switchShuffle', this.shuffle);
     // }
   }
+
   switchReversed() {
     this.reversed = !this.reversed;
   }
@@ -778,6 +800,7 @@ export default class {
   clearPlayNextList() {
     this._playNextList = [];
   }
+
   removeTrackFromQueue(index: number) {
     this._playNextList.splice(index, 1);
   }

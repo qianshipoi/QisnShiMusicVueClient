@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu, Tray, nativeTheme, shell } from 'electron'
+import { BrowserWindow, ipcMain, Menu, Tray, nativeTheme, shell, app } from 'electron'
 import path from 'path'
 interface IWindowsCfg {
   id: number | null;
@@ -102,13 +102,11 @@ export class Window {
   }
 
   // 获取窗口
-  getWindow(id: number): any {
+  getWindow(id: number): BrowserWindow {
     return BrowserWindow.fromId(id);
   }
   // 创建窗口
   createWindows(options: object) {
-    console.log("------------开始创建窗口...");
-
     const url = process.env.VITE_DEV_SERVER_URL;
     const indexHtml = path.join(process.env.DIST, 'index.html');
     let args = Object.assign({}, windowsCfg, options);
@@ -119,8 +117,7 @@ export class Window {
         this.group[i].route === args.route &&
         !this.group[i].isMultiWindow
       ) {
-        console.log("窗口已经存在了");
-        this.getWindow(Number(i)).focus();
+        this.getWindow(Number(i)).show()
         return;
       }
     }
@@ -131,7 +128,7 @@ export class Window {
       console.log("parentId：" + args.parentId);
       opt.parent = this.getWindow(args.parentId) as BrowserWindow; // 获取主窗口
     } else if (this.main) {
-      console.log('当前为主窗口');
+      console.log('main window');
     } // 还可以继续做其它判断
 
     // 根据传入配置项，修改窗口的相关参数
@@ -141,7 +138,7 @@ export class Window {
     if (args.minWidth) opt.minWidth = args.minWidth;
     if (args.minHeight) opt.minHeight = args.minHeight;
     let win = new BrowserWindow(opt);
-    console.log("窗口 id：" + win.id);
+    console.log("window id:" + win.id);
     this.group[win.id] = {
       route: args.route,
       isMultiWindow: args.isMultiWindow,
@@ -150,12 +147,9 @@ export class Window {
     if (args.maximize && args.resizable) {
       win.maximize();
     }
-    // 是否主窗口
-    console.log(args.isMainWin);
 
     if (args.isMainWin) {
       if (this.main) {
-        console.log("主窗口存在");
         delete this.group[this.main.id];
         this.main.close();
       }
@@ -215,8 +209,6 @@ export class Window {
   }
   // 创建托盘
   createTray() {
-    console.log("创建托盘");
-
     this.tray = new Tray(path.join(process.env.PUBLIC, 'akua.jpg'));
 
     const contextMenu = Menu.buildFromTemplate([
@@ -229,7 +221,10 @@ export class Window {
       {
         label: '退出',
         click: () => {
-          this.main.destroy();
+          for (let i in this.group) {
+            this.getWindow(Number(i)).destroy()
+          }
+          app.quit();
         }
       }
     ]);
@@ -288,6 +283,8 @@ export class Window {
     })
     // 隐藏
     ipcMain.on("window-hide", (event, winId) => {
+      console.log('window-hide:' + winId);
+
       if (winId) {
         this.getWindow(Number(winId)).hide();
       } else {
@@ -308,7 +305,7 @@ export class Window {
     });
     // 最小化
     ipcMain.on("mini", (event: Event, winId) => {
-      console.log("最小化窗口 id", winId);
+      console.log("mini window id", winId);
       if (winId) {
         this.getWindow(Number(winId)).minimize();
       } else {
@@ -354,7 +351,8 @@ export class Window {
     });
 
     ipcMain.on('window-close', () => {
-      app.quit();
+      this.main && this.main.close();
+      // app.quit();
     });
 
     ipcMain.on('window-minimize', () => {

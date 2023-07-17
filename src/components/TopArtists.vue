@@ -1,8 +1,6 @@
 <template>
   <div>
-
     <GroupHeader title="Top Artists" @more-click="moreClick" />
-
     <n-grid cols="2 260:3" x-gap="8" y-gap="8" class="px-8">
       <n-grid-item v-for="item in props.modelValue">
         <div class="flex rounded-xl bg-slate-400 aspect-square overflow-hidden">
@@ -11,7 +9,6 @@
         <n-text class="block text-center my-2">{{ item.name }}</n-text>
       </n-grid-item>
     </n-grid>
-
   </div>
 </template>
 

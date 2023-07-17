@@ -9,7 +9,7 @@
         <n-menu :collapsed="collapsed" :value="currentMenu" @update-value="updateCurrentMenu" :collapsed-width="64"
           :collapsed-icon-size="22" :options="menuOptions" />
       </n-layout-sider>
-      <n-layout class="relative h-full">
+      <n-layout>
         <n-scrollbar>
           <router-view v-slot="{ Component }">
             <keep-alive>
