@@ -80,4 +80,8 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to) => {
+  console.log(to);
+})
+
 export default router;

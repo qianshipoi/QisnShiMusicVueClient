@@ -59,7 +59,7 @@ export function loginQrCodeKey() {
  * @param {string} params.key
  * @param {string=} params.qrimg 传入后会额外返回二维码图片base64编码
  */
-export function loginQrCodeCreate(params: { key: string, qrimg?: string }) {
+export function loginQrCodeCreate(params: { key: string, qrimg?: boolean }) {
   return request({
     url: '/login/qr/create',
     method: 'get',
@@ -81,9 +81,19 @@ export function loginQrCodeCheck(key: string) {
     method: 'get',
     params: {
       key,
+      noCookie: true,
       timestamp: new Date().getTime(),
     },
   });
+}
+export function loginStatus() {
+  return request({
+    url: '/login/status',
+    method: 'get',
+    params: {
+      timestamp: new Date().getTime(),
+    }
+  })
 }
 
 /**

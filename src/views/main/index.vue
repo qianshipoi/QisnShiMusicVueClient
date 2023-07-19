@@ -2,7 +2,7 @@
   <n-grid responsive="screen" class="h-full" item-responsive>
     <n-grid-item span="24 m:18" class="p-4">
       <n-space vertical>
-        <TopPlaylists :model-value="playlists" />
+        <TopPlaylists :model-value="playlists" @click="e => $router.push(`/playlists/${e.id}`)" @play="play" />
         <TopSongs :model-value="songs" />
       </n-space>
 
@@ -63,6 +63,9 @@ const getSongs = async () => {
       songs.value.push(item)
     })
   })
+}
+const play = (playlist: Playlist) => {
+  console.log('playlist', playlist);
 }
 
 </script>

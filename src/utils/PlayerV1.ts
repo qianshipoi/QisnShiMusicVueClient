@@ -431,7 +431,8 @@ export default class {
       return
     }
     if (this._personalFMTrack.id === nextTrackId) return
-    getTrackDetail(String(nextTrackId)).then(data => {
+    getTrackDetail(String(nextTrackId)).then(response => {
+      const data = response.data;
       let track = data.songs[0]
       this._getAudioSource(track)
     })

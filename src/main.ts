@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import VueLazyload from 'vue-lazyload'
 import './samples/node-api';
 import store from './store';
 import router from './route';
@@ -16,6 +17,7 @@ const app = createApp(App);
 app.use(store);
 app.use(router);
 app.use(i18n);
+app.use(VueLazyload);
 setupNaive(app);
 app.mount('#app').$nextTick(() => {
   postMessage({ payload: 'removeLoading' }, '*');

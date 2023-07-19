@@ -1,6 +1,6 @@
 <template>
   <n-card size="huge" content-style="padding:0">
-    <GroupHeader title="Global Top 50">
+    <GroupHeader title="Global Top 50" @more-click="emits('seeAll')">
       <template v-slot:more>
         <n-text>See all</n-text>
       </template>
@@ -9,8 +9,8 @@
     <n-scrollbar x-scrollable ref="scrollbar" :on-scroll="onScroll" class="top-songs">
       <div class="relative px-6">
         <n-space :wrap="false">
-          <PlaylistCard class="cursor-pointer" :model-value="playlist" v-for="playlist in modelValue"
-            :key="playlist.id" />
+          <PlaylistCard @click="emits('click', playlist)" @play="emits('play', playlist)" class="cursor-pointer"
+            :model-value="playlist" v-for="playlist in modelValue" :key="playlist.id" />
         </n-space>
       </div>
     </n-scrollbar>
@@ -25,6 +25,12 @@ import GroupHeader from '@/components/GroupHeader.vue'
 
 defineProps<{
   modelValue: Array<Playlist>
+}>()
+
+const emits = defineEmits<{
+  (e: 'play', playlist: Playlist): void,
+  (e: 'click', playlist: Playlist): void,
+  (e: 'seeAll'): void
 }>()
 
 const themeVars = useThemeVars()

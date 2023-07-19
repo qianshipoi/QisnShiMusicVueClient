@@ -1,18 +1,19 @@
 <template>
   <n-space vertical>
-    <div class="song-item flex items-center rounded-md px-4 py-2" v-for="(song, index) in modelValue" :key="song.id">
+    <section class="song-item flex items-center rounded-md px-4 py-2   wow animate__animated animate__fadeInUp"
+      v-for="(song, index) in modelValue" :key="song.id">
       <n-h2 class="m-0 w-16 text-center">{{ (index + 1).toString().padStart(2, '0') }}</n-h2>
       <div class="rounded-lg bg-slate-400 aspect-square w-16 mx-2 overflow-hidden">
-        <img :src="getAlumb(song).picUrl + '?param=64y64'" :alt="getAlumb(song).name">
+        <img v-lazy="getAlumb(song).picUrl + '?param=64y64'"  :alt="getAlumb(song).name">
       </div>
       <div class="flex-1">{{ song.name }}</div>
       <n-text
         class="aspect-square w-16 flex justify-center items-center">{{ formatDuration(song.dt ?? song.duration) }}</n-text>
-      <IconButton class="mx-2" />
+      <IconButton class="mx-2" @click="emits('play', song)" />
       <IconButton class="mx-2">
         <FolderOpen />
       </IconButton>
-    </div>
+    </section>
   </n-space>
 </template>
 
@@ -21,10 +22,30 @@ import { Album, Song } from '@/utils/neteasecloudmusicapi';
 import { useThemeVars } from 'naive-ui';
 import IconButton from './IconButton.vue';
 import { FolderOpen } from '@vicons/ionicons5'
-
+import WOW from 'wow.js';
 defineProps<{
   modelValue: Array<Song>
 }>()
+
+const emits = defineEmits<{
+  (e: 'play', treck: Song): void,
+}>()
+
+onMounted(() => {
+  new WOW({
+    boxClass: "wow", // 我理解为wow自带类名
+    animateClass: "animate__animated", // 看成animate的类名
+    offset: 0, //元素距浏览器底部偏移量
+    mobile: true, // 是否在移动端奏效
+    live: true, // 是否热更新元素
+    scrollContainer: '.n-scrollbar-container',
+    callback: function (box) {
+      // the callback is fired every time an animation is started
+      // the argument that is passed in is the DOM node being animated
+    },
+    resetAnimation: true, // reset animation on end (default is true)
+  }).init();
+})
 
 const themeVars = useThemeVars();
 
@@ -43,7 +64,6 @@ const formatDuration = (duration: number): string => {
 const getAlumb = (song: Song): Album => {
   return song.al ?? song.album
 }
-
 
 </script>
 

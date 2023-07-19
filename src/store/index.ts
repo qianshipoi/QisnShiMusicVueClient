@@ -21,7 +21,6 @@ export const useStore = defineStore('main', {
       likedSongPlaylistId: undefined
     };
   },
-  actions: {},
   persist: {
     enabled: true,
     strategies: [

@@ -24,13 +24,14 @@
         </n-ellipsis>
       </n-card>
     </n-space>
+
     <ul style="margin-top:1rem" v-if="isBusy">
       <li v-for="item in 6" :key="item">
         <SongItem></SongItem>
       </li>
     </ul>
 
-    <SongList v-else class="mt-4 mx-4" :model-value="songs" />
+    <SongList v-else @play="musicStore.$patch(x => x.display = !x.display)" class="mt-4 mx-4 " :model-value="songs" />
 
   </div>
 </template>
@@ -43,6 +44,9 @@ import SongItem from '@/components/SongItem.vue'
 import useLocale from '@/hook/useLocale'
 import SongList from '@/components/SongList.vue'
 import { detail } from '@/api/playlist'
+import { useMusicStore } from '@/store/music'
+
+const musicStore = useMusicStore();
 
 const {
   i18n: { t }
@@ -54,6 +58,7 @@ const isBusy = ref(true)
 const playlistDetail = ref<PlaylistDetail | undefined>()
 const songs = ref<Array<Song>>([])
 
+
 const getPlaylistDetail = async (id: number) => {
   isBusy.value = true
   try {
@@ -61,6 +66,8 @@ const getPlaylistDetail = async (id: number) => {
     if (status === 200 && data.code === 200) {
       playlistDetail.value = data.playlist
       songs.value = playlistDetail.value?.tracks || []
+      console.log('songs', songs.value);
+
     } else {
       message.error('获取歌单详细信息异常')
       router.back()
@@ -81,4 +88,9 @@ const play = (id: number) => {
 onMounted(() => {
   getPlaylistDetail(Number(route.params['id']))
 })
+
+watch(() => route.params.id, (newVal) => {
+  console.log(newVal);
+})
+
 </script>

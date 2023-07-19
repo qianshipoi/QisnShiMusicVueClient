@@ -3,7 +3,7 @@
     class="play-bar fixed left-0 bottom-0 right-0 z-10 grid gap-4 justify-center items-center mx-10 my-6 px-6 py-2 h-20 rounded-xl shadow-lg">
     <img class="aspect-square bg-slate-300"
       src="http://p1.music.126.net/5noG3sFSgZk5vHl9yV_5Mw==/109951165796624203.jpg?param=240y240" alt="小中心" />
-    <h1>标题</h1>
+    <h4>标题</h4>
     <div class="grid items-center w-full gap-2" style="grid-template-columns: 40px 1fr 40px;">
       <span>00:00</span>
       <div class="flex-1">

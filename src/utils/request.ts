@@ -50,6 +50,10 @@ instance.interceptors.request.use(
         cancel: c
       });
     });
+    config.params = {
+      ...config.params,
+      realIP: '122.190.236.110'
+    }
 
     return config;
   },
