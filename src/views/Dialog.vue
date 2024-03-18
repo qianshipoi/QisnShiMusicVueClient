@@ -4,7 +4,7 @@
       <DialogNavBar />
     </n-layout-header>
     <n-layout has-sider style="height:calc(100% - 64px);">
-
+      
     </n-layout>
   </n-layout>
 </template>

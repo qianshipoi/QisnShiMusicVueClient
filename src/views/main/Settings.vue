@@ -8,17 +8,17 @@
       <n-text>{{ t('settings.theme') }}</n-text>
       <n-select v-model:value="mainStore.currentTheme" size="medium" :options="themeOptions" />
     </n-space>
-
     <n-button @click="openNewWindow">打开新窗口</n-button>
   </n-space>
 </template>
 
 <script setup lang="ts">
 import useLocale from "@/hook/useLocale";
+import useWinId from '@/hook/useWinId'
 import { useStore } from "@/store";
-import { useIpcRenderer } from "@vueuse/electron";
-const ipcRenderer = useIpcRenderer();
+import { openDialog } from '@/utils/dialog-service'
 
+const winId = useWinId();
 const mainStore = useStore()
 const {
   i18n: { t },
@@ -52,11 +52,10 @@ const updateLocaleHandle = (newVal: string) => {
 }
 
 const openNewWindow = () => {
-  ipcRenderer.send("window-new", {
-    route: "/helloworld",
-    width: 500,
-    height: 500,
-  });
+  openDialog({
+    title: '测试新窗口',
+    parentId: winId.value ?? undefined,
+  })
 }
 
 </script>

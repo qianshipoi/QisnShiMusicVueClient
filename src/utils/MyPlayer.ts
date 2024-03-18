@@ -203,15 +203,32 @@ export default class {
     }
   }
 
+  _analyser: AnalyserNode | null = null
+  _bufferLength: number = 0
+  _dataArray: Uint8Array | null = null
+
   private _playAudioSource(source: string, autoplay = true) {
     Howler.unload()
     this._howler = new Howl({
       src: [source],
-      html5: true,
       preload: true,
       format: ['mp3', 'flac'],
       onend: () => {
         this._nextTrackCallback()
+      },
+      onplay: () => {
+        this._analyser = Howler.ctx.createAnalyser()
+        Howler.masterGain.connect(this._analyser)
+        this._analyser.connect(Howler.ctx.destination)
+        this._analyser.fftSize = 2048
+        this._analyser.minDecibels = -90
+        this._analyser.maxDecibels = -10
+        this._analyser.smoothingTimeConstant = 0.85
+        this._bufferLength = this._analyser.frequencyBinCount
+        this._dataArray = new Uint8Array(this._bufferLength)
+        setInterval(() => {
+          this._test()
+        }, 1000);
       }
     })
 
@@ -232,6 +249,12 @@ export default class {
     if (autoplay) {
       this.play()
     }
+  }
+
+  private _test() {
+    if (this._analyser === null) return
+    this._analyser.getByteTimeDomainData(this._dataArray!)
+    console.log(this._dataArray);
   }
 
   private _nextTrackCallback() {
@@ -272,7 +295,7 @@ export default class {
     autoplay = true,
     ifUnplayableThen = UNPLAYABLE_CONDITION.PLAY_NEXT_TRACK) {
     return getTrackDetail(String(id)).then(data => {
-      const track = data.data.songs[0];
+      const track = data.songs[0];
       this._currentTrack = track;
       return this._replaceCurrentTrackAudio(
         track,

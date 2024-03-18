@@ -13,7 +13,6 @@ db.version(1).stores({
   album: '&id, updateTime',
 })
 
-
 let tracksCacheBytes = 0
 
 async function deleteExcessCache() {

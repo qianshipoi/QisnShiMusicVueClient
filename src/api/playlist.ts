@@ -118,7 +118,7 @@ export function highQualityPlaylist(params: { cat: string, limit?: number, befor
  * @param {Object} params
  * @param {string} params.order
  * @param {string} params.cat
- * @param {number=} params.limit
+ * @param {number?} params.limit
  */
 export function topPlaylist(params: { order?: string, cat?: string, limit?: number }) {
   return instance({

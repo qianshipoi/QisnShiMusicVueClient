@@ -105,6 +105,7 @@ export class Window {
   getWindow(id: number): BrowserWindow {
     return BrowserWindow.fromId(id);
   }
+
   // 创建窗口
   createWindows(options: object) {
     const url = process.env.VITE_DEV_SERVER_URL;
@@ -181,36 +182,18 @@ export class Window {
     args.id = win.id;
     if (process.env.VITE_DEV_SERVER_URL) {
       // electron-vite-vue#298
-      win.loadURL(url + `?winId=${args.id}`);
+      win.loadURL(url + `${args.route}?winId=${args.id}`);
     } else {
-      win.loadFile(indexHtml + `?winId=${args.id}`);
+      win.loadFile(indexHtml + `${args.route}?winId=${args.id}`);
     }
 
     win.once("ready-to-show", () => {
       win.show();
     });
-
-    // // 打开网址（加载页面）
-    // let winURL;
-    // if (app.isPackaged) {
-    //   winURL = args.route
-    //     ? `app://./index.html${args.route}`
-    //     : `app://./index.html`;
-    // } else {
-    //   winURL = args.route
-    //     ? `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}${args.route}?winId=${args.id}`
-    //     : `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}?winId=${args.id}`;
-    // }
-    // console.log("新窗口地址:", winURL);
-    // win.loadURL(winURL);
-    // win.once("ready-to-show", () => {
-    //   win.show();
-    // });
   }
   // 创建托盘
   createTray() {
     this.tray = new Tray(path.join(process.env.PUBLIC, 'akua.jpg'));
-
     const contextMenu = Menu.buildFromTemplate([
       {
         label: '显示',
@@ -219,10 +202,13 @@ export class Window {
         }
       },
       {
+        type: "separator", // 分割线
+      },
+      {
         label: '退出',
         click: () => {
           for (let i in this.group) {
-            this.getWindow(Number(i)).destroy()
+            this.getWindow(Number(i))?.destroy()
           }
           app.quit();
         }
@@ -232,41 +218,49 @@ export class Window {
     this.tray.setToolTip('QianShi music.');
     this.tray.setContextMenu(contextMenu);
     this.tray.on('double-click', () => {
-      // 双击通知区图标实现应用的显示或隐藏
       this.main.isVisible() ? this.main.hide() : this.main.show();
       this.main.isVisible() ? this.main.setSkipTaskbar(false) : this.main.setSkipTaskbar(true);
     });
 
-    // const contextMenu = Menu.buildFromTemplate([
-    //   {
-    //     label: "注销",
-    //     click: () => {
-    //       console.log("注销");
-    //       // 主进程发送消息，通知渲染进程注销当前登录用户 --todo
-    //     },
-    //   },
-    //   {
-    //     type: "separator", // 分割线
-    //   },
-    //   // 菜单项
-    //   {
-    //     label: "退出",
-    //     role: "quit", // 使用内置的菜单行为，就不需要再指定 click 事件
-    //   },
-    // ]);
-    // this.tray = new Tray(path.join(__dirname, "../favicon.ico")); // 图标
-    // // 点击托盘显示窗口
-    // this.tray.on("click", () => {
-    //   for (let i in this.group) {
-    //     if (this.group[i]) this.getWindow(Number(i)).show();
-    //   }
-    // });
-    // // 处理右键
-    // this.tray.on("right-click", () => {
-    //   this.tray?.popUpContextMenu(contextMenu);
-    // });
-    // this.tray.setToolTip("小猪课堂");
+    // 点击托盘显示窗口
+    this.tray.on("click", () => {
+      for (let i in this.group) {
+        if (this.group[i]) this.getWindow(Number(i)).show();
+      }
+    });
+
+    // 处理右键
+    this.tray.on("right-click", () => {
+      this.tray?.popUpContextMenu(contextMenu);
+    });
   }
+
+  _createTrayWindow() {
+    const url = process.env.VITE_DEV_SERVER_URL;
+    const indexHtml = path.join(process.env.DIST, 'index.html');
+    const route = '/tray';
+    const win = new BrowserWindow({
+      width: 300,
+      height: 300,
+      show: false,
+      frame: false,
+      fullscreenable: false,
+      resizable: false,
+      transparent: true,
+      webPreferences: {
+        contextIsolation: false,
+        nodeIntegration: true,
+        preload: path.join(__dirname, "../preload/index.js"),
+      },
+    });
+
+    if (process.env.VITE_DEV_SERVER_URL) {
+      win.loadURL(url + `${route}`);
+    } else {
+      win.loadFile(indexHtml + `${route}`);
+    }
+  }
+
   // 开启监听
   listen() {
     // 固定
@@ -350,9 +344,18 @@ export class Window {
       return nativeTheme.themeSource;
     });
 
-    ipcMain.on('window-close', () => {
-      this.main && this.main.close();
-      // app.quit();
+    ipcMain.on('window-close', (e: Event, winId) => {
+      if (winId) {
+        const window = this.getWindow(Number(winId))
+        window?.close();
+        window?.destroy();
+        delete this.group[winId];
+      } else {
+        for (let i in this.group) {
+          this.getWindow(Number(i))?.destroy()
+        }
+        app.quit();
+      }
     });
 
     ipcMain.on('window-minimize', () => {

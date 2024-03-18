@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { useStore } from "@/store";
 
 export function isTrackPlayable(track: any) {
-  let result = {
+  const result = {
     playable: true,
     reason: ''
   }

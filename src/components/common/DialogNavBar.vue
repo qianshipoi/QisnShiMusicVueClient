@@ -1,17 +1,6 @@
 <template>
   <div class="nav-bar flex justify-between items-center h-16 px-4 ">
     <h1 class="title">QS</h1>
-    <n-input v-model:value="searchText" type="text" placeholder="搜索..." class="max-w-md" clearable></n-input>
-    <n-select class="w-64" v-model:value="mainStore.currentTheme" size="medium" :options="themeOptions" />
-    <n-tooltip trigger="hover">
-      <template #trigger>
-        <n-avatar @click="showLoginDialog = true" class="no-drag cursor-pointer" round size="small" src="/akua.jpg" />
-      </template>
-      登录
-    </n-tooltip>
-    <n-modal style="width: 500px;" :mask-closable="false" v-model:show="showLoginDialog" preset="card" title="扫码登录">
-      <LoginCard />
-    </n-modal>
     <n-button-group size="small">
       <n-button strong secondary @click="minimize">
         <template #icon>
@@ -40,35 +29,14 @@
 
 <script setup lang="ts">
 import { ipcRenderer } from 'electron';
-import { useStore } from "@/store";
 import { Close, Expand, Remove } from '@vicons/ionicons5'
-import useLocale from '@/hook/useLocale';
 import { useRoute } from 'vue-router';
-import LoginCard from '@/components/LoginCard.vue'
-import { loginStatus } from '@/api/auth'
 
-const mainStore = useStore()
 const route = useRoute()
-const { i18n: { t } } = useLocale()
-
-const searchText = ref<string>()
-const showLoginDialog = ref(false)
-
-const themeOptions = [
-  { label: () => t('settings.dark'), value: 'dark' },
-  { label: () => t('settings.light'), value: 'light' },
-  { label: () => t('settings.system'), value: 'system' }
-]
-
-onBeforeMount(async () => {
-  const response = await loginStatus()
-  console.log(response.data);
-
-})
 
 const close = () => {
-  ipcRenderer.send('window-close')
-  // ipcRenderer.send('window-hide', route.query['winId'])
+  // ipcRenderer.send('window-close')
+  ipcRenderer.send('window-close', route.query['winId'])
 }
 
 let isFullScreen = false

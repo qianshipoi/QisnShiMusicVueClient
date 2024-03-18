@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import { NeteaseBaseResponse, Privilege, Song } from '@/utils/neteasecloudmusicapi';
 import { mapTrackPlayableStatus } from '@/utils/common';
-import { cacheLyric, getLyricFromCache, getTrackDetailFromCache } from '@/utils/db';
+import { cacheLyric, getLyricFromCache, getTrackDetailFromCache, cacheTrackDetail } from '@/utils/db';
 
 
 
@@ -48,46 +48,34 @@ export function getMP3(id: string) {
  * 说明 : 调用此接口 , 传入音乐 id(支持多个 id, 用 , 隔开), 可获得歌曲详情(注意:歌曲封面现在需要通过专辑内容接口获取)
  * @param {string} ids - 音乐 id, 例如 ids=405998841,33894312
  */
-// export function getTrackDetail(ids: string) {
-//   const fetchLatest = () => {
-//     return request({
-//       url: '/song/detail',
-//       method: 'get',
-//       params: {
-//         ids,
-//       },
-//     }).then(data => {
-//       (data.data.songs as Array<Song>).map(song => {
-//         const privileges = (data.data.privileges as Array<Privilege>).find(t => t.id === song.id)
-//       })
-//       // data.songs.map(song => {
-//       //   const privileges = data.privileges.find(t => t.id === song.id);
-//       //   cacheTrackDetail(song, privileges);
-//       // });
-//       data.data.songs = mapTrackPlayableStatus(data.data.songs, data.data.privileges);
-//       return data;
-//     });
-//   };
-//   fetchLatest();
-
-//   let idsInArray = [String(ids)];
-//   if (typeof ids === 'string') {
-//     idsInArray = ids.split(',');
-//   }
-
-//   return getTrackDetailFromCache(idsInArray).then(result => {
-//     if (result) {
-//       result.songs = mapTrackPlayableStatus(result.songs, result.privileges);
-//     }
-//     return result ?? fetchLatest();
-//   });
-// }
-
 export function getTrackDetail(ids: string) {
-  return request.get<{
-    songs: Array<Song>
-    privileges: Array<Privilege>
-  }>('/song/detail', { params: { ids } })
+  const fetchLatest = () => {
+    return request.get<{
+      songs: Array<Song>
+      privileges: Array<Privilege>
+    }>('/song/detail', { params: { ids } })
+      .then(res => {
+        res.data.songs.map(song => {
+          const privileges = res.data.privileges.find(t => t.id === song.id)
+          cacheTrackDetail(song, privileges!);
+        })
+        res.data.songs = mapTrackPlayableStatus(res.data.songs, res.data.privileges);
+        return res;
+      });
+  };
+  fetchLatest();
+
+  let idsInArray = [String(ids)];
+  if (typeof ids === 'string') {
+    idsInArray = ids.split(',');
+  }
+
+  return getTrackDetailFromCache(idsInArray).then(result => {
+    if (result) {
+      result.songs = mapTrackPlayableStatus(result.songs, result.privileges);
+    }
+    return result ?? fetchLatest();
+  });
 }
 
 /**

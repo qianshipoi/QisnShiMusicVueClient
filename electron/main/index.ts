@@ -5,7 +5,7 @@ import {
 } from 'electron';
 import { release } from 'node:os';
 import { join } from 'node:path';
-import { Window } from './window'
+import { Window, windowsCfg } from './window'
 
 // The built directory structure
 //
@@ -67,6 +67,27 @@ async function createWindow() {
     }
   })
   window.createTray()
+
+  window.main.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+    if (details.url.includes('fonts.gstatic.com')) {
+      return callback(details);
+    }
+    callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
+  })
+  window.main.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    if (details.method === 'OPTIONS' || details.url.includes('fonts.gstatic.com')) {
+      details.statusLine = 'HTTP/1.1 200 OK';
+      details.statusCode = 200;
+      return callback(details);
+    }
+    callback({
+      responseHeaders: {
+        'Access-Control-Allow-Origin': ['*'],
+        'Access-Control-Allow-Headers': 'Content-Type',
+        ...details.responseHeaders,
+      },
+    });
+  });
 }
 
 app.whenReady().then(createWindow);
